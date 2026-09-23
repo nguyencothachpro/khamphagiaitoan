@@ -1,23 +1,19 @@
-const stages=[
-{tag:"BÍ ẨN",title:"P có thể là những số nguyên nào?",prompt:'Ta đã biến đổi được biểu thức thành <strong>P = 1 − 7/(√x + 3)</strong>. Chưa cần tính x. Hãy nhìn vào mẫu số.',question:"Vì x > 0, √x chắc chắn như thế nào?",choices:["√x > 0","√x = 0","√x < 0"],correct:0,explain:"Đúng. Với x > 0 thì căn bậc hai √x là số dương."},
-{tag:"MANH MỐI",title:"Mẫu số đang nói cho ta điều gì?",prompt:"Ta biết √x > 0. Vậy so với 3, số √x + 3 như thế nào?",question:"Chọn phát biểu đúng.",choices:["√x + 3 > 3","√x + 3 = 3","√x + 3 < 3"],correct:0,explain:"Đúng. Cộng 3 vào hai vế của √x > 0 ta được √x + 3 > 3."},
-{tag:"KHÁM PHÁ",title:"Đặt một ẩn phụ để nhìn rõ hơn",prompt:"Gọi <strong>T = 7/(√x + 3)</strong>. Vì mẫu số dương và lớn hơn 3, T có tính chất gì?",question:"Chọn khoảng đúng cho T.",choices:["0 < T < 7/3","T > 7/3","T < 0"],correct:0,explain:"Đúng. T dương và vì mẫu lớn hơn 3 nên phân số nhỏ hơn 7/3."},
-{tag:"KHÁM PHÁ",title:"P nằm ở đâu trên trục số?",prompt:"Ta có P = 1 − T và 0 < T < 7/3. Hãy trừ khoảng này từ 1.",question:"Khoảng nào đúng?",choices:["−4/3 < P < 1","1 < P < 4/3","−1 < P < 4/3"],correct:0,explain:"Đúng. Tăng trưởng của mẫu số làm phân số giảm; từ 0 < T < 7/3 suy ra 1−7/3 < P < 1."},
-{tag:"CHUẨN HÓA",title:"Bây giờ hãy lọc các số nguyên",prompt:"P nằm trong khoảng (−4/3; 1). Những số nguyên nào nằm trong khoảng này?",question:"Chọn tập số nguyên của P.",choices:["{−1, 0}","{−2, −1, 0}","{0, 1}"],correct:0,explain:"Đúng. Vì −4/3 = −1,333... nên các số nguyên nằm giữa −4/3 và 1 là −1 và 0."}
-];
-let step=0, unlocked=false;
-const stageTag=document.getElementById("stageTag"),stageTitle=document.getElementById("stageTitle"),stagePrompt=document.getElementById("stagePrompt"),interactive=document.getElementById("interactive"),nextBtn=document.getElementById("nextBtn"),progressBar=document.getElementById("progressBar"),progressText=document.getElementById("progressText");
-function render(){
- const s=stages[step]; unlocked=false; nextBtn.disabled=true;
- stageTag.textContent=s.tag; stageTitle.textContent=s.title; stagePrompt.innerHTML=s.prompt;
- interactive.innerHTML='<div class="question">'+s.question+'</div><div class="choices">'+s.choices.map((c,i)=>'<button class="choice" data-i="'+i+'">'+c+'</button>').join('')+'</div><div id="feedback" class="feedback"></div>';
- interactive.querySelectorAll(".choice").forEach(btn=>btn.addEventListener("click",()=>{
-   const i=Number(btn.dataset.i); const ok=i===s.correct; btn.classList.add(ok?"correct":"wrong");
-   const feedback=document.getElementById("feedback");
-   if(ok){feedback.textContent="✓ "+s.explain;feedback.style.color="#128463";unlocked=true;nextBtn.disabled=false}
-   else{feedback.textContent="Chưa đúng. Hãy quay lại manh mối và thử lại.";feedback.style.color="#c13a3a"}
- }));
- progressBar.style.width=((step+1)/stages.length*100)+"%"; progressText.textContent=(step+1)+"/"+stages.length;
-}
-nextBtn.addEventListener("click",()=>{if(!unlocked)return;if(step<stages.length-1){step++;render()}else{nextBtn.textContent="✓ Đã hoàn thành";nextBtn.disabled=true;document.querySelector(".stage-tag").textContent="HOÀN THÀNH"}});
-render();
+const messages=document.getElementById("messages"),promptEl=document.getElementById("prompt"),fileInput=document.getElementById("fileInput"),attachBtn=document.getElementById("attachBtn"),sendBtn=document.getElementById("sendBtn"),attachmentsEl=document.getElementById("attachments"),clearBtn=document.getElementById("clearBtn");
+let files=[];
+attachBtn.onclick=()=>fileInput.click();
+fileInput.onchange=()=>{addFiles([...fileInput.files]);fileInput.value=""};
+document.addEventListener("paste",e=>{const imgs=[...e.clipboardData.items].filter(i=>i.type.startsWith("image/")).map(i=>i.getAsFile()).filter(Boolean);if(imgs.length)addFiles(imgs)});
+["dragenter","dragover"].forEach(x=>document.addEventListener(x,e=>{if(e.dataTransfer&&e.dataTransfer.files.length){e.preventDefault();document.body.classList.add("drop")}}));
+document.addEventListener("drop",e=>{document.body.classList.remove("drop");if(e.dataTransfer&&e.dataTransfer.files.length){e.preventDefault();addFiles([...e.dataTransfer.files])}});
+document.addEventListener("dragleave",()=>document.body.classList.remove("drop"));
+function addFiles(list){files.push(...list);renderFiles()}
+function renderFiles(){attachmentsEl.innerHTML=files.map((f,i)=>'<div class="file-chip">📎 '+escapeHtml(f.name)+' <button data-i="'+i+'">×</button></div>').join("");attachmentsEl.querySelectorAll("button").forEach(b=>b.onclick=()=>{files.splice(+b.dataset.i,1);renderFiles()})}
+document.querySelectorAll("[data-example]").forEach(b=>b.onclick=()=>{promptEl.value=b.dataset.example;resize();promptEl.focus()});
+clearBtn.onclick=()=>{files=[];renderFiles();messages.innerHTML='<div class="welcome"><div class="mark">∑</div><h1>Đưa bài toán cho tôi</h1><p>Anh có thể <b>gõ đề</b>, <b>dán ảnh chụp màn hình</b>, kéo thả ảnh hoặc <b>đính kèm PDF/Word/ảnh</b>. Tôi sẽ cùng anh phân tích và giải theo đúng cách mình đã thống nhất.</p></div>'};
+promptEl.addEventListener("input",resize);function resize(){promptEl.style.height="auto";promptEl.style.height=Math.min(promptEl.scrollHeight,180)+"px"}promptEl.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});sendBtn.onclick=send;
+async function send(){const text=promptEl.value.trim();if(!text&&!files.length)return;const current=[...files];files=[];renderFiles();promptEl.value="";resize();addMessage("user",text,current);const typing=addTyping();sendBtn.disabled=true;try{const payload={message:text,files:await serializeFiles(current)};const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await r.json();typing.remove();if(!r.ok)throw new Error(data.error||"Không thể kết nối.");addMessage("assistant",data.text||"Không có nội dung trả lời.");}catch(err){typing.remove();addMessage("assistant","Có lỗi: "+err.message+"\n\nNếu đây là lần đầu triển khai, hãy kiểm tra biến môi trường OPENAI_API_KEY trên Vercel.");}finally{sendBtn.disabled=false;promptEl.focus()}}
+async function serializeFiles(list){return Promise.all(list.map(async f=>({name:f.name,type:f.type||"application/octet-stream",data:await toDataUrl(f)})))}function toDataUrl(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+function addMessage(role,text,files){const row=document.createElement("div");row.className="msg "+role;const av=role==="assistant"?'<div class="avatar">∑</div>':"";let previews=(files||[]).map(f=>f.type.startsWith("image/")?'<div class="attachment-preview"><img src="'+f.data+'"><span>'+escapeHtml(f.name)+'</span></div>':'<div class="attachment-preview">📎 '+escapeHtml(f.name)+'</div>').join("");const bubble='<div class="bubble">'+format(text)+previews+'</div>';row.innerHTML=role==="assistant"?av+bubble:bubble;messages.appendChild(row);window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})}
+function addTyping(){const row=document.createElement("div");row.className="msg assistant";row.innerHTML='<div class="avatar">∑</div><div class="bubble"><div class="typing"><i></i><i></i><i></i></div></div>';messages.appendChild(row);window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return row}
+function format(s){return escapeHtml(s).replace(/\*\*(.*?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
