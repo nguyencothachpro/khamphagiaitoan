@@ -1,5 +1,59 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Khám Phá Giải Toán</title><link rel="stylesheet" href="styles.css"></head>
-<body><div class="app"><header class="top"><a class="logo" href="/">Khám Phá <b>Giải Toán</b></a><button id="clearBtn" class="ghost">Cuộc trò chuyện mới</button></header>
-<main class="chat"><section id="messages" class="messages"><div class="welcome"><div class="mark">∑</div><h1>Đưa bài toán cho tôi</h1><p>Anh có thể <b>gõ đề</b>, <b>dán ảnh chụp màn hình</b>, kéo thả ảnh hoặc <b>đính kèm PDF/Word/ảnh</b>. Tôi sẽ cùng anh phân tích và giải theo đúng cách mình đã thống nhất.</p><div class="examples"><button data-example="Giải bài toán này từ những kiến thức nhỏ nhất, giải thích vì sao phải làm từng bước và sau cùng cho tôi 5 bài tương tự.">🧮 Giải bài toán</button><button data-example="Phân tích bài toán này theo kiểu khám phá: đâu là dữ kiện, đâu là manh mối và nên hỏi học sinh câu gì trước?">🔎 Tìm hướng khám phá</button><button data-example="Hãy kiểm tra lời giải này, chỉ ra chỗ học sinh dễ sai và sửa cách trình bày cho rõ bản chất.">✏️ Kiểm tra lời giải</button></div></div></section>
-<section class="composer-wrap"><div id="attachments" class="attachments"></div><div class="composer"><button id="attachBtn" class="icon-btn" title="Đính kèm tệp">＋</button><input id="fileInput" type="file" hidden accept="image/*,.pdf,.doc,.docx,.txt,.md"><textarea id="prompt" rows="1" placeholder="Nhập câu hỏi hoặc dán ảnh bài toán vào đây..."></textarea><button id="sendBtn" class="send" title="Gửi">↑</button></div><div class="hint">Enter để gửi · Shift + Enter để xuống dòng · Ctrl/Cmd + V để dán ảnh chụp màn hình</div></section></main></div><script src="app.js"></script></body></html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Khám Phá Giải Toán</title><meta name="description" content="Không gian thảo luận và khám phá bài toán.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">∑</div><div><strong>Khám Phá</strong><span>Giải Toán</span></div></div>
+    <button class="new-chat" id="newChat"><span>＋</span> Cuộc trò chuyện mới</button>
+    <div class="side-label">Gần đây</div>
+    <div id="history" class="history"></div>
+    <div class="side-bottom">
+      <button class="side-item" id="openChatGPT">↗ <span>Mở ChatGPT</span></button>
+      <div class="profile"><div class="avatar">T</div><div><b>Không gian cá nhân</b><small>Khám Phá Giải Toán</small></div><span>•••</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="menu">☰</button>
+      <div class="mobile-title">Khám Phá Giải Toán</div>
+      <div class="top-actions"><button class="top-icon" title="Mở ChatGPT" id="topChatGPT">↗</button><button class="top-icon" title="Giao diện">☼</button></div>
+    </header>
+
+    <section class="chat-area" id="chatArea">
+      <div id="messages" class="messages">
+        <div class="welcome" id="welcome">
+          <div class="hero-mark">∑</div>
+          <h1>Hôm nay anh muốn khám phá bài toán nào?</h1>
+          <p>Đưa đề bài vào đây. Có thể gõ, dán ảnh chụp màn hình hoặc kéo thả tệp. Đây là <b>không gian giao diện riêng</b> để anh thảo luận bài toán.</p>
+          <div class="quick-grid">
+            <button data-example="Tôi sẽ gửi một bài toán. Hãy giúp tôi tìm hiểu từ dữ kiện nhỏ nhất, đừng nhảy bước."><span>🔎</span><b>Khám phá từ đầu</b><small>Đi từng manh mối</small></button>
+            <button data-example="Hãy giải bài toán này và giải thích thật rõ vì sao phải làm từng bước."><span>🧮</span><b>Giải bài toán</b><small>Hiểu bản chất</small></button>
+            <button data-example="Hãy kiểm tra lời giải này, tìm chỗ dễ sai và giải thích lại cho học sinh."><span>✏️</span><b>Kiểm tra lời giải</b><small>Tìm lỗi và sửa</small></button>
+            <button data-example="Hãy giúp tôi đặt các câu hỏi gợi mở để học sinh tự phát hiện cách giải bài này."><span>💡</span><b>Gợi mở cho học sinh</b><small>Không học vẹt</small></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="composer-zone">
+      <div id="attachments" class="attachments"></div>
+      <div class="composer">
+        <button class="attach" id="attachBtn" title="Đính kèm tệp">＋</button>
+        <input id="fileInput" type="file" hidden accept="image/*,.pdf,.doc,.docx,.txt,.md">
+        <textarea id="prompt" rows="1" placeholder="Nhập bài toán hoặc dán ảnh vào đây..."></textarea>
+        <button class="send" id="sendBtn" title="Gửi">↑</button>
+      </div>
+      <div class="composer-note">Dán ảnh trực tiếp bằng <b>Ctrl/Cmd + V</b> · Enter để gửi · Shift + Enter để xuống dòng</div>
+      <div class="provider-note">Giao diện riêng của <b>Khám Phá Giải Toán</b> · AI được kết nối theo cấu hình của anh</div>
+    </section>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
