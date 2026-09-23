@@ -1,19 +1,23 @@
 # Khám Phá Giải Toán
 
-Dự án độc lập, tối giản như một cuộc trò chuyện với trợ lý Toán.
+Đây là **lớp giao diện (vỏ)** cho một không gian thảo luận Toán, tách khỏi dự án cũ.
 
-- Gõ đề bài.
-- Dán ảnh chụp màn hình bằng Ctrl/Cmd + V.
-- Kéo thả ảnh.
-- Đính kèm ảnh, PDF, Word hoặc tệp văn bản.
-- Nhận phân tích và lời giải theo phương pháp Hành Trình Khám Phá Toán.
+## Mục tiêu hiện tại
 
-Không có module giáo viên, soạn bài, giao bài, chấm, bảng viết hay hệ thống quản trị trong phiên bản này.
+- Giao diện chat riêng, đẹp và tối giản.
+- Dán ảnh chụp màn hình trực tiếp.
+- Kéo thả hoặc đính kèm ảnh/PDF/Word/tệp văn bản.
+- Có lịch sử hiển thị ở thanh bên.
+- Có nút mở ChatGPT trong tab riêng.
+- Không lưu mật khẩu ChatGPT và không cố lấy cookie/phiên đăng nhập ChatGPT.
+- **Không dùng OpenAI API trong phiên bản này.**
 
-## Vercel
+### Lưu ý kiến trúc
 
-Thêm Environment Variable:
-OPENAI_API_KEY = khóa API của anh
-OPENAI_MODEL = gpt-5.6-luna (tuỳ chọn)
+ChatGPT cá nhân và OpenAI API là hai hệ thống khác nhau. Website này vì vậy không giả vờ rằng nó đang dùng tài khoản ChatGPT của người dùng ở phía máy chủ. Nút “Mở ChatGPT” mở dịch vụ ChatGPT chính thức để người dùng đăng nhập và sử dụng tài khoản của mình.
 
-Sau đó deploy lại.
+Nếu sau này muốn “ruột AI” chạy ngay trong giao diện này, cần chọn một cơ chế kết nối AI được hỗ trợ chính thức hoặc một AI/server riêng; không nên thu thập email, mật khẩu hoặc cookie ChatGPT.
+
+## Chạy
+
+Có thể deploy như website tĩnh trên Vercel/GitHub Pages hoặc mở trực tiếp `index.html`.
