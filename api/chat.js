@@ -21,21 +21,14 @@ export default async function handler(req,res){
   if(req.method!=="POST") return res.status(405).json({error:"Method not allowed"});
   try{
     const body=req.body||{};
-    const message=body.message||"";
-    const files=Array.isArray(body.files)?body.files:[];
-    if(!message&&!files.length) return res.status(400).json({error:"Chưa có nội dung bài toán."});
+    const history=Array.isArray(body.history)?body.history:[];
+    if(!history.length) return res.status(400).json({error:"Chưa có nội dung bài toán."});
     if(!process.env.OPENAI_API_KEY) return res.status(500).json({error:"Chưa cấu hình OPENAI_API_KEY trên Vercel."});
     const client=new OpenAI({apiKey:process.env.OPENAI_API_KEY});
-    const content=[];
-    if(message) content.push({type:"input_text",text:message});
-    for(const f of files){
-      if(String(f.type||"").startsWith("image/")) content.push({type:"input_image",image_url:f.data});
-      else content.push({type:"input_file",filename:f.name,file_data:f.data});
-    }
     const response=await client.responses.create({
       model:process.env.OPENAI_MODEL||"gpt-5.6-luna",
       instructions:SYSTEM,
-      input:[{role:"user",content}]
+      input:history
     });
     return res.status(200).json({text:response.output_text||"Không nhận được nội dung trả lời."});
   }catch(e){
