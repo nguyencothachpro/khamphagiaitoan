@@ -58,7 +58,19 @@ async function gemini(text,files,apiKey){
  if(!key)throw new Error("Chưa có Gemini API key. Hãy nhập key ở nút 🔑 API key.");
  const parts=[{text}];
  for(const f of files){if(f.type.startsWith("image/")||f.type==="application/pdf")parts.push({inline_data:{mime_type:f.type,data:f.data.split(",")[1]}});}
- const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(process.env.GEMINI_MODEL||"gemini-3.8-flash")+":generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts}],systemInstruction:{parts:[{text:SYSTEM}]},generationConfig:{response_mime_type:"application/json",response_schema:SCHEMA}})});
+ const geminiSchema=toGeminiSchema(SCHEMA);
+ const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(process.env.GEMINI_MODEL||"gemini-3.8-flash")+":generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts}],systemInstruction:{parts:[{text:SYSTEM}]},generationConfig:{response_mime_type:"application/json",response_schema:geminiSchema}})});
  const d=await r.json();if(!r.ok)throw new Error(d.error?.message||"Gemini API lỗi");
  const out=d.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("");if(!out)throw new Error("Gemini không trả về cấu trúc.");return JSON.parse(out);
+}
+
+function toGeminiSchema(node){
+ if(Array.isArray(node)) return node.map(toGeminiSchema);
+ if(!node||typeof node!=="object") return node;
+ const out={};
+ for(const [k,v] of Object.entries(node)){
+   if(k==="additionalProperties") continue;
+   out[k]=toGeminiSchema(v);
+ }
+ return out;
 }
