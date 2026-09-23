@@ -1,15 +1,19 @@
-# Hành Trình Khám Phá Toán
+# Khám Phá Giải Toán
 
-Nền tảng học Toán THCS theo mô hình **Bí ẩn → Manh mối → Khám phá → Hình thành kiến thức → Luyện tập → Vận dụng**.
+Dự án độc lập, tối giản như một cuộc trò chuyện với trợ lý Toán.
 
-## Mục tiêu phiên bản đầu
-- Học sinh lớp 6–9
-- Hành trình khám phá cho từng bài toán
-- Gợi ý từng bước thay vì đưa ngay lời giải
-- Chuẩn hóa kiến thức sau khi học sinh tự khám phá
-- 5 bài luyện tập sau mỗi bài
-- Chuẩn bị kiến trúc để phát triển tiếp: giáo viên → soạn bài → PDF/Word → bảng viết → giao bài → chấm → AI
+- Gõ đề bài.
+- Dán ảnh chụp màn hình bằng Ctrl/Cmd + V.
+- Kéo thả ảnh.
+- Đính kèm ảnh, PDF, Word hoặc tệp văn bản.
+- Nhận phân tích và lời giải theo phương pháp Hành Trình Khám Phá Toán.
 
-## Chạy local
-Phiên bản hiện tại là prototype front-end thuần HTML/CSS/JS, không phụ thuộc dự án cũ.
-Mở `index.html` bằng trình duyệt để xem.
+Không có module giáo viên, soạn bài, giao bài, chấm, bảng viết hay hệ thống quản trị trong phiên bản này.
+
+## Vercel
+
+Thêm Environment Variable:
+OPENAI_API_KEY = khóa API của anh
+OPENAI_MODEL = gpt-5.6-luna (tuỳ chọn)
+
+Sau đó deploy lại.
