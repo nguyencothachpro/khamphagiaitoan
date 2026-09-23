@@ -31,20 +31,21 @@ Phong cách: rõ ràng, sư phạm, bắt đầu từ điều nhỏ nhất; luô
 export default async function handler(req,res){
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
  try{
-  const {provider="openai",prompt="",files=[]}=req.body||{};
+  const {provider="openai",prompt="",files=[],apiKey=""}=req.body||{};
   if(!prompt&&!files.length)return res.status(400).json({error:"Chưa có bài toán."});
   const inputText=prompt||"Hãy đọc đề bài từ tệp đính kèm và xây Hành Trình Khám Phá Toán.";
   let journey;
-  if(provider==="gemini") journey=await gemini(inputText,files); else journey=await openai(inputText,files);
+  if(provider==="gemini") journey=await gemini(inputText,files,apiKey); else journey=await openai(inputText,files,apiKey);
   return res.status(200).json({journey});
  }catch(e){console.error(e);return res.status(500).json({error:e.message||"Lỗi máy chủ."})}
 }
 
-async function openai(text,files){
- if(!process.env.OPENAI_API_KEY)throw new Error("Chưa cấu hình OPENAI_API_KEY trên Vercel.");
+async function openai(text,files,apiKey){
+ const key=apiKey||process.env.OPENAI_API_KEY;
+ if(!key)throw new Error("Chưa có OpenAI API key. Hãy nhập key ở nút 🔑 API key.");
  const content=[{type:"input_text",text}];
  for(const f of files){if(f.type.startsWith("image/"))content.push({type:"input_image",image_url:f.data});else if(f.type==="application/pdf")content.push({type:"input_file",filename:f.name,file_data:f.data});}
- const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Authorization":"Bearer "+process.env.OPENAI_API_KEY,"Content-Type":"application/json"},body:JSON.stringify({
+ const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({
   model:process.env.OPENAI_MODEL||"gpt-5.6-luna",instructions:SYSTEM,input:[{role:"user",content}],
   text:{format:{type:"json_schema",name:"math_journey",strict:true,schema:SCHEMA}}
  })});
@@ -52,11 +53,12 @@ async function openai(text,files){
  const out=d.output?.flatMap(x=>x.content||[]).find(x=>x.type==="output_text")?.text;if(!out)throw new Error("OpenAI không trả về cấu trúc.");
  return JSON.parse(out);
 }
-async function gemini(text,files){
- if(!process.env.GEMINI_API_KEY)throw new Error("Chưa cấu hình GEMINI_API_KEY trên Vercel.");
+async function gemini(text,files,apiKey){
+ const key=apiKey||process.env.GEMINI_API_KEY;
+ if(!key)throw new Error("Chưa có Gemini API key. Hãy nhập key ở nút 🔑 API key.");
  const parts=[{text}];
  for(const f of files){if(f.type.startsWith("image/")||f.type==="application/pdf")parts.push({inline_data:{mime_type:f.type,data:f.data.split(",")[1]}});}
- const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(process.env.GEMINI_MODEL||"gemini-3.8-flash")+":generateContent?key="+encodeURIComponent(process.env.GEMINI_API_KEY),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts}],systemInstruction:{parts:[{text:SYSTEM}]},generationConfig:{response_mime_type:"application/json",response_schema:SCHEMA}})});
+ const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(process.env.GEMINI_MODEL||"gemini-3.8-flash")+":generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts}],systemInstruction:{parts:[{text:SYSTEM}]},generationConfig:{response_mime_type:"application/json",response_schema:SCHEMA}})});
  const d=await r.json();if(!r.ok)throw new Error(d.error?.message||"Gemini API lỗi");
  const out=d.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("");if(!out)throw new Error("Gemini không trả về cấu trúc.");return JSON.parse(out);
 }
