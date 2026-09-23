@@ -1,1 +1,1 @@
-{"name":"khamphagiaitoan","private":true,"version":"0.1.0","type":"module","dependencies":{"openai":"latest"}}
+{"name":"khamphagiaitoan","private":true,"version":"0.2.0","type":"module","scripts":{"dev":"vercel dev"}}
