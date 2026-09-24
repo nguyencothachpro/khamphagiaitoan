@@ -85,7 +85,7 @@ async function run(){
 
 function buildProgressiveMap(map,steps,index){
   if(!map||!steps.length)return "";
-  const branches=(map.branches||[]).map((b,i)=>'<div class="pm-live-branch"><div class="pm-live-label hidden" data-piece="'+esc(b.label||("Phần "+(i+1)))+'">'+esc(b.label||("Phần "+(i+1)))+'</div><div class="pm-live-expression hidden" data-piece="'+esc(b.expression||"")+'">'+esc(b.expression||"")+'</div></div>').join("");
+  const branches=(map.branches||[]).map((b,i)=>{const label=b.label||("Phần "+(i+1));const expression=b.expression||"";const reason=b.reason||"Đây là cách diễn tả phần này từ dữ kiện của đề bài.";return '<div class="pm-live-branch" data-branch-index="'+i+'"><div class="pm-live-label hidden" data-piece="'+esc(label)+'">'+esc(label)+'</div><div class="pm-live-expression hidden" data-piece="'+esc(expression)+'">'+esc(expression)+'</div><div class="pm-live-reason hidden">💬 <span>'+esc(reason)+'</span></div></div>';}).join("");
   window.__KHAM_PHA_GUIDED = window.__KHAM_PHA_GUIDED || {};
   window.__KHAM_PHA_GUIDED[index] = steps;
   return '<div class="guided-map" data-map="'+index+'"><div class="guided-map-head"><span>🎓</span><div><b>Giáo viên thiết kế đường suy luận — '+esc(map.method_title||("Cách giải "+(index+1)))+'</b><small>'+esc(map.method_note||"Giáo viên hỏi → học sinh suy luận → sơ đồ hình thành.")+'</small></div></div><div class="guided-progress"><span class="progress-count">Bước 1/'+steps.length+'</span><div class="progress-track"><i style="width:0%"></i></div></div><div class="pm-live-map"><div class="pm-live-root hidden" data-piece="'+esc(map.root||"Bài toán")+'">'+esc(map.root||"Bài toán")+'</div><div class="pm-live-vline hidden"></div><div class="pm-live-branches hidden">'+branches+'</div><div class="pm-live-hub hidden"></div><div class="pm-live-conclusion hidden"><div data-piece="'+esc(map.conclusion_label||"")+'">'+esc(map.conclusion_label||"")+'</div><strong data-piece="'+esc(map.conclusion_value||"")+'">'+esc(map.conclusion_value||"")+'</strong></div></div><div class="guided-current"><div class="guided-live-kicker">GV NGHIÊN CỨU — BƯỚC <span class="current-no">1</span></div><h4 class="current-title"></h4><div class="guided-question current-question"></div><div class="student-goal current-goal"></div><div class="teacher-expected"><span>🧠 Học sinh dự kiến tự nhận ra</span><b class="current-expected"></b></div><div class="guided-actions"><button class="hint-btn" type="button">💡 Xem gợi ý sư phạm</button><button class="confirm-btn" type="button">▶ Xem bước tiếp theo → mở mảnh sơ đồ</button></div><div class="guided-hint hidden current-hint"></div><div class="guided-wrong hidden current-wrong"></div><details class="teacher-answer"><summary>👨‍🏫 Chi tiết thiết kế bước dạy</summary><div class="current-design"></div></details><div class="unlocked-piece hidden current-unlock"></div></div><div class="guided-complete hidden"><div class="complete-badge">🎉 Học sinh đã tự dựng xong sơ đồ</div><div class="pm-final-explanation">💡 Chú giải: '+esc(map.explanation||"")+'</div><div class="complete-next">Bây giờ hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div></div>';
@@ -116,13 +116,13 @@ function initGuidedMaps(){
       let matched=false;
       map.querySelectorAll("[data-piece]").forEach(el=>{
         const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
-        if(p && (p===key||p.includes(key)||key.includes(p))){el.classList.remove("hidden");matched=true;}
+        if(p && (p===key||p.includes(key)||key.includes(p))){el.classList.remove("hidden");const branch=el.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");matched=true;}
       });
       if(index===0){root.classList.remove("hidden");vline.classList.remove("hidden");matched=true;}
       if(!matched && index>0){
         const fallback=[...map.querySelectorAll(".pm-live-label.hidden,.pm-live-expression.hidden")];
         const piece=fallback[Math.min(index-1,fallback.length-1)];
-        if(piece)piece.classList.remove("hidden");
+        if(piece){piece.classList.remove("hidden");const branch=piece.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");}
       }
       if(index>0)branches.classList.remove("hidden");
       if(index>=data.length-1){hub.classList.remove("hidden");conclusion.classList.remove("hidden");}
