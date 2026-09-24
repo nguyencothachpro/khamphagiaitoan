@@ -21,13 +21,13 @@
     <div class="hero">∑</div>
     <h1>Biến một bài toán thành<br><span>một hành trình khám phá</span></h1>
     <p>Đưa <b>bài toán hoặc lý thuyết</b> vào. Hệ thống sẽ tìm cấu trúc bản chất và chuyển thành <b>sơ đồ → câu hỏi dẫn dắt → khám phá → chuẩn hóa → luyện tập</b>.</p>
-    <div class="drop-hint">Kéo thả hoặc dán ảnh đề bài ngay tại đây</div>
+    <div class="drop-hint">Kéo thả hoặc dán ảnh đề bài ngay tại đây · hoặc bấm <b>＋</b> để chọn tệp</div>
   </div>
   <div id="journey" class="journey hidden"></div>
 </section>
 <section class="input-zone">
  <div id="files" class="files"></div>
- <div class="input-card"><button id="attach" class="attach">＋</button><input id="file" type="file" hidden multiple accept="image/*,.pdf,.doc,.docx,.txt,.md">
+ <div class="input-card"><label id="attach" class="attach" for="file" role="button" tabindex="0" title="Đính kèm ảnh hoặc tệp">＋</label><input id="file" type="file" multiple accept="image/*,.pdf,.doc,.docx,.txt,.md">
  <textarea id="prompt" rows="1" placeholder="Dán bài toán, lý thuyết, định nghĩa, tính chất hoặc ảnh chụp vào đây..."></textarea><button id="send" class="send">➜</button></div>
  <div class="note">AI sẽ tạo <b>cấu trúc Hành Trình Khám Phá</b>, không chỉ trả một lời giải.</div>
 </section>
