@@ -21,26 +21,51 @@ function renderFiles(){
   filesEl.querySelectorAll("button").forEach(b=>b.onclick=()=>{files.splice(Number(b.dataset.i),1);renderFiles();});
 }
 
-attach.addEventListener("click",()=>file.click());
-file.addEventListener("change",()=>{addFiles([...file.files]);file.value="";});
+file.addEventListener("change",e=>{
+  const picked=Array.from(e.target.files||[]);
+  if(picked.length) addFiles(picked);
+  e.target.value="";
+});
+attach.addEventListener("keydown",e=>{
+  if(e.key==="Enter"||e.key===" "){e.preventDefault();file.click();}
+});
 
-document.addEventListener("paste",e=>{
-  const items=[...(e.clipboardData?.items||[])];
-  const pastedFiles=items.map(i=>i.kind==="file"?i.getAsFile():null).filter(Boolean);
-  if(pastedFiles.length){e.preventDefault();addFiles(pastedFiles);return;}
-  // Nếu dán ảnh chụp màn hình, tự đưa ảnh vào danh sách tệp.
-  const images=items.filter(i=>i.kind==="file"&&i.type.startsWith("image/")).map(i=>i.getAsFile()).filter(Boolean);
-  if(images.length){e.preventDefault();addFiles(images);return;}
-  // Nếu người dùng dán văn bản ở bất kỳ vị trí nào, đưa vào ô nhập nếu ô nhập chưa có focus.
-  const text=e.clipboardData?.getData("text/plain")||"";
+function handlePaste(e){
+  const cd=e.clipboardData;
+  if(!cd)return;
+
+  const directFiles=Array.from(cd.files||[]).filter(f=>f&&f.size);
+  const itemFiles=Array.from(cd.items||[])
+    .filter(i=>i.kind==="file")
+    .map(i=>{try{return i.getAsFile();}catch{return null;}})
+    .filter(f=>f&&f.size);
+
+  const all=[...directFiles,...itemFiles];
+  const unique=[];
+  const seen=new Set();
+  for(const f of all){
+    const key=[f.name,f.size,f.type,f.lastModified].join("|");
+    if(!seen.has(key)){seen.add(key);unique.push(f);}
+  }
+
+  if(unique.length){
+    e.preventDefault();
+    e.stopPropagation();
+    addFiles(unique);
+    status.textContent="Đã dán "+unique.length+" tệp từ clipboard";
+    return;
+  }
+
+  const text=cd.getData("text/plain")||"";
   if(text && document.activeElement!==promptEl){
     e.preventDefault();
-    promptEl.value=(promptEl.value?promptEl.value+"\n":"")+text;
+    promptEl.value=(promptEl.value?"\n":"")+text;
     promptEl.dispatchEvent(new Event("input",{bubbles:true}));
     promptEl.focus();
     status.textContent="Đã dán nội dung vào ô nhập";
   }
-});
+}
+window.addEventListener("paste",handlePaste,true);
 
 ["dragenter","dragover"].forEach(type=>document.addEventListener(type,e=>{
   if(e.dataTransfer?.files?.length){e.preventDefault();document.body.classList.add("drag");}
