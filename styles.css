@@ -204,4 +204,4 @@
 .guided-actions .prev-btn:not(:disabled):hover{border-color:#7168d7;background:#f3f1ff}
 .guided-actions .prev-btn:disabled{opacity:.35;cursor:not-allowed}
 
-.paste-image{border:1px solid #d9d5e5;background:#fff;border-radius:10px;padding:0 10px;height:38px;cursor:pointer;font-size:12px;color:#5f5a73}.paste-image:hover{border-color:#7168d7;background:#f5f3ff}
+.paste-image:hover{border-color:#7168d7;background:#f5f3ff}
