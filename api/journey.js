@@ -3,6 +3,7 @@ title:{type:"string"},summary:{type:"string"},
 student:{type:"object",additionalProperties:false,properties:{grade:{type:"string"},topic:{type:"string"},task:{type:"string"}},required:["grade","topic","task"]},
 teacher:{type:"object",additionalProperties:false,properties:{lesson_goal:{type:"string"},mystery:{type:"string"},clue_strategy:{type:"string"}},required:["lesson_goal","mystery","clue_strategy"]},
 mystery:{type:"object",additionalProperties:false,properties:{title:{type:"string"},context:{type:"string"}},required:["title","context"]},
+problem_map:{type:"object",additionalProperties:false,properties:{root:{type:"string"},branches:{type:"array",minItems:1,maxItems:6,items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},expression:{type:"string"}},required:["label","expression"]}},conclusion_label:{type:"string"},conclusion_value:{type:"string"},explanation:{type:"string"}},required:["root","branches","conclusion_label","conclusion_value","explanation"]},
 evidence:{type:"array",minItems:2,maxItems:6,items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},quote:{type:"string"},why_notice:{type:"string"},question:{type:"string"}},required:["label","quote","why_notice","question"]}},
 clues:{type:"array",minItems:2,maxItems:6,items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},from_evidence:{type:"array",items:{type:"string"}},discovery_goal:{type:"string"},guiding_questions:{type:"array",minItems:2,maxItems:4,items:{type:"string"}},expected_discovery:{type:"string"},hint:{type:"string"}},required:["title","from_evidence","discovery_goal","guiding_questions","expected_discovery","hint"]}},
 discoveries:{type:"array",minItems:2,maxItems:8,items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"},from_clues:{type:"array",items:{type:"string"}},why_it_matters:{type:"string"}},required:["title","content","from_clues","why_it_matters"]}},
@@ -12,7 +13,7 @@ standardization:{type:"object",additionalProperties:false,properties:{concept:{t
 solution:{type:"object",additionalProperties:false,properties:{synthesis:{type:"string"},title:{type:"string"},steps:{type:"array",items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},content:{type:"string"},why:{type:"string"}},required:["label","content","why"]}},final_answer:{type:"string"}},required:["synthesis","title","steps","final_answer"]},
 practice:{type:"array",minItems:5,maxItems:5,items:{type:"object",additionalProperties:false,properties:{level:{type:"string"},problem:{type:"string"},guidance:{type:"string"},solution:{type:"string"},common_error:{type:"string"}},required:["level","problem","guidance","solution","common_error"]}},
 application:{type:"object",additionalProperties:false,properties:{title:{type:"string"},task:{type:"string"}},required:["title","task"]}
-},required:["title","summary","student","teacher","mystery","evidence","clues","discoveries","connections","synthesis","standardization","solution","practice","application"]};
+},required:["title","summary","student","teacher","mystery","problem_map","evidence","clues","discoveries","connections","synthesis","standardization","solution","practice","application"]};
 
 const SYSTEM=`Bạn là bộ máy GIẢI PHẪU VÀ KHÁM PHÁ BÍ ẨN CỦA MỘT BÀI TOÁN THCS Việt Nam.
 
@@ -23,6 +24,13 @@ BỐN TẦNG BẮT BUỘC:
 2. LẦN THEO DẤU VẾT → MANH MỐI: mỗi clue phải ghi rõ nó xuất phát từ evidence nào. Manh mối là điều học sinh có thể lần ra từ dấu vết, chưa phải lời giải cuối.
 3. KHÁM PHÁ: mỗi clue có mục tiêu phát hiện, 2–4 câu hỏi đi từ quan sát đến suy luận, một đáp án/phát hiện mong đợi và gợi ý khi bí. Câu hỏi phải bám vào clue và KHÔNG nói sẵn expected_discovery.
 4. KẾT NỐI: connections phải chỉ rõ phát hiện nào kết nối với phát hiện nào và vì sao. Cuối cùng synthesis phải làm học sinh thấy cách giải lóe ra từ chính các kết nối.
+
+SƠ ĐỒ GIẢI PHẪU NGẮN Ở ĐẦU BÀI:
+- Tạo thêm problem_map ngay sau phần bí ẩn. Đây là bản đồ cực ngắn để học sinh nhìn thấy cấu trúc bài toán trước khi đi vào điều tra chi tiết.
+- root là đại lượng/thời gian/đối tượng lớn nhất của bài toán, branches là các phần tách ra từ root theo đúng quan hệ trong đề; expression là biểu diễn ngắn gọn (ví dụ “3x”, “7(x+5)”).
+- conclusion_label và conclusion_value là điểm hội tụ của các nhánh (ví dụ “TỔNG SẢN LƯỢNG” và “335”).
+- explanation giải thích bằng lời vì sao sơ đồ này được lập như vậy, không giải bài và không bỏ qua phần khám phá.
+- Sơ đồ phải ngắn, dễ nhìn, ưu tiên 1 root → các nhánh → 1 điểm hội tụ.
 
 QUY TẮC SƯ PHẠM:
 - Không đặt x, không lập phương trình, không đưa công thức giải ngay từ đầu nếu học sinh chưa có đủ lý do để đi đến đó.
