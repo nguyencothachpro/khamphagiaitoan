@@ -1,19 +1,22 @@
-# Khám Phá Giải Toán
+# Khám Phá Giải Toán — Hành Trình Khám Phá
 
-Dự án độc lập, tối giản như một cuộc trò chuyện với trợ lý Toán.
+Đây là dự án độc lập. Sản phẩm không phải chatbot thông thường: AI nhận bài toán/ảnh/tệp rồi trả về **cấu trúc Hành Trình Khám Phá Toán**.
 
-- Gõ đề bài.
-- Dán ảnh chụp màn hình bằng Ctrl/Cmd + V.
-- Kéo thả ảnh.
-- Đính kèm ảnh, PDF, Word hoặc tệp văn bản.
-- Nhận phân tích và lời giải theo phương pháp Hành Trình Khám Phá Toán.
+Mạch chính:
+**Bí ẩn → Manh mối → Khám phá → Chuẩn hóa → Lời giải → 5 bài luyện tập → Vận dụng**
 
-Không có module giáo viên, soạn bài, giao bài, chấm, bảng viết hay hệ thống quản trị trong phiên bản này.
+Hệ thống dùng **Structured Output / JSON Schema** để AI trả về dữ liệu có cấu trúc, sau đó giao diện tự render thành các khối. OpenAI và Gemini đều có cơ chế structured output/JSON schema; xem tài liệu chính thức của từng nền tảng. 
 
-## Vercel
+## Cấu hình Vercel
 
-Thêm Environment Variable:
-OPENAI_API_KEY = khóa API của anh
-OPENAI_MODEL = gpt-5.6-luna (tuỳ chọn)
+Chọn provider ngay trên giao diện:
+- `OPENAI_API_KEY`
+- `OPENAI_MODEL` (mặc định `gpt-5.6-luna`)
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL` (mặc định `gemini-3.8-flash`)
 
-Sau đó deploy lại.
+API key chỉ nằm ở biến môi trường server, không đưa vào JavaScript trình duyệt.
+
+## Không phải LMS
+
+Phiên bản này tập trung vào **bộ máy biến bài toán thành Hành Trình Khám Phá**. Không tự thêm giao bài, chấm điểm, quản lý học sinh hay module quản trị.
