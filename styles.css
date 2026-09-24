@@ -193,3 +193,9 @@
 .current-design{font-size:10px;line-height:1.6;color:#53625a}
 .guided-current .guided-answer{display:none!important}
 .guided-current .teacher-answer{margin-top:9px}
+
+/* Diễn giải ngay trên từng mảnh sơ đồ — học sinh thấy cả "có gì" và "vì sao" */
+.pm-live-reason{max-width:190px;margin:0 auto 9px;padding:6px 8px;border-radius:8px;background:#f8f7fc;color:#686574;font-size:9.5px;line-height:1.45;text-align:left;border-left:3px solid #b8b0e9}
+.pm-live-reason span{display:block}
+.pm-live-branch .pm-live-label.hidden~.pm-live-reason,
+.pm-live-branch .pm-live-expression.hidden~.pm-live-reason{display:none}
