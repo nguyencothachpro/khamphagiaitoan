@@ -69,3 +69,32 @@
   .conn-arrow{display:none}
   .conn-reason{grid-column:2}
 }
+
+/* ===== SƠ ĐỒ TÓM TẮT BÀI TOÁN ===== */
+.problem-map{margin:0 0 18px;padding:18px 18px 20px;border:1px solid #e0dfe9;border-radius:18px;background:#fff;box-shadow:0 6px 20px rgba(40,35,80,.045)}
+.pm-title{text-align:center}
+.pm-title .eyebrow{color:#5d55c9}
+.pm-diagram{display:flex;flex-direction:column;align-items:center;margin-top:12px}
+.pm-root{min-width:190px;max-width:90%;padding:10px 18px;text-align:center;border:2px solid #5d55c9;border-radius:12px;background:#faf9ff;font-weight:800;font-size:13px}
+.pm-vline{width:1px;height:17px;background:#bbb8c8}
+.pm-branches{display:flex;justify-content:center;gap:0;width:min(720px,100%)}
+.pm-branch{position:relative;flex:1;text-align:center;padding:0 9px}
+.pm-branch:before{content:"";position:absolute;top:0;left:0;right:0;border-top:1px solid #c7c4d2}
+.pm-branch:first-child:before{left:50%}
+.pm-branch:last-child:before{right:50%}
+.pm-branch:after{content:"↓";display:block;color:#aaa6b5;font-size:15px;margin-top:1px}
+.pm-label{margin:8px auto 5px;padding:8px 8px 5px;font-size:11px;font-weight:750;color:#555661}
+.pm-expression{display:inline-block;min-width:90px;padding:8px 13px;border:1px solid #dddbe7;border-radius:9px;background:#fbfbfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:700;color:#514b77}
+.pm-hub-line{width:1px;height:17px;background:#bbb8c8}
+.pm-conclusion{min-width:190px;padding:9px 17px;text-align:center;border:2px solid #3e9d75;border-radius:12px;background:#f4fbf7;color:#38775d;font-size:11px;font-weight:750}
+.pm-conclusion strong{display:block;margin-top:2px;font-size:15px;color:#2d6d55}
+.pm-explanation{max-width:780px;margin:14px auto 0;padding:10px 13px;border-radius:10px;background:#f8f7fc;color:#686873;font-size:11px;line-height:1.6}
+.pm-explanation b{color:#554da0}
+@media(max-width:600px){
+  .problem-map{padding:15px 8px}
+  .pm-branches{align-items:stretch}
+  .pm-branch{padding:0 3px}
+  .pm-label{font-size:10px}
+  .pm-expression{min-width:0;padding:7px 7px;font-size:11px}
+  .pm-root,.pm-conclusion{min-width:145px}
+}
