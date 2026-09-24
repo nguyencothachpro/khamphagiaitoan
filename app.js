@@ -4,7 +4,18 @@ let files=[];
 
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
-function addFiles(list){files.push(...list);renderFiles();}
+function addFiles(list){
+  const incoming=[...list].filter(Boolean);
+  const MAX_FILE=3*1024*1024;
+  const MAX_TOTAL=3.5*1024*1024;
+  const accepted=[];let total=files.reduce((n,f)=>n+(f.size||0),0);
+  for(const f of incoming){
+    if((f.size||0)>MAX_FILE){status.textContent="Tệp quá lớn: "+f.name+" (tối đa 3 MB/tệp)";continue;}
+    if(total+(f.size||0)>MAX_TOTAL){status.textContent="Tổng tệp quá lớn (tối đa khoảng 3,5 MB/lần)";break;}
+    accepted.push(f);total+=f.size||0;
+  }
+  if(accepted.length){files.push(...accepted);renderFiles();status.textContent="Đã thêm "+accepted.length+" tệp";}
+}
 function renderFiles(){
   filesEl.innerHTML=files.map((f,i)=>'<div class="file-chip">📎 '+esc(f.name)+' <button type="button" data-i="'+i+'">×</button></div>').join("");
   filesEl.querySelectorAll("button").forEach(b=>b.onclick=()=>{files.splice(Number(b.dataset.i),1);renderFiles();});
@@ -15,8 +26,20 @@ file.addEventListener("change",()=>{addFiles([...file.files]);file.value="";});
 
 document.addEventListener("paste",e=>{
   const items=[...(e.clipboardData?.items||[])];
-  const images=items.filter(i=>i.type.startsWith("image/")).map(i=>i.getAsFile()).filter(Boolean);
-  if(images.length){e.preventDefault();addFiles(images);}
+  const pastedFiles=items.map(i=>i.kind==="file"?i.getAsFile():null).filter(Boolean);
+  if(pastedFiles.length){e.preventDefault();addFiles(pastedFiles);return;}
+  // Nếu dán ảnh chụp màn hình, tự đưa ảnh vào danh sách tệp.
+  const images=items.filter(i=>i.kind==="file"&&i.type.startsWith("image/")).map(i=>i.getAsFile()).filter(Boolean);
+  if(images.length){e.preventDefault();addFiles(images);return;}
+  // Nếu người dùng dán văn bản ở bất kỳ vị trí nào, đưa vào ô nhập nếu ô nhập chưa có focus.
+  const text=e.clipboardData?.getData("text/plain")||"";
+  if(text && document.activeElement!==promptEl){
+    e.preventDefault();
+    promptEl.value=(promptEl.value?promptEl.value+"\n":"")+text;
+    promptEl.dispatchEvent(new Event("input",{bubbles:true}));
+    promptEl.focus();
+    status.textContent="Đã dán nội dung vào ô nhập";
+  }
 });
 
 ["dragenter","dragover"].forEach(type=>document.addEventListener(type,e=>{
