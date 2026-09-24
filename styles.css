@@ -184,3 +184,12 @@
   .pm-live-root,.pm-live-conclusion{min-width:140px}
   .guided-current{padding:12px}
 }
+
+/* ===== SƠ ĐỒ BẢN CHẤT LÝ THUYẾT ===== */
+.concept-maps{margin:0 0 22px;padding:20px;border:2px solid #e2e0f0;border-radius:20px;background:linear-gradient(180deg,#fcfbff,#fff);box-shadow:0 9px 28px rgba(75,65,130,.055)}
+.concept-head{text-align:center;margin-bottom:13px}.concept-head .eyebrow{color:#5d55c9}.concept-head h3{margin:6px 0 5px;font-size:18px}.concept-head p{max-width:760px;margin:0 auto;color:#74757e;font-size:11px;line-height:1.6}
+.guided-empty{padding:14px;border-radius:10px;background:#fff8ed;color:#8a6a37;font-size:11px;text-align:center}
+.teacher-expected{margin-top:9px;padding:10px 11px;border:1px solid #dfe8e3;border-radius:10px;background:#f7fbf8}.teacher-expected span{display:block;color:#5f7168;font-size:10px;margin-bottom:4px}.teacher-expected b{display:block;color:#2f7358;font-size:12px;line-height:1.5}
+.current-design{font-size:10px;line-height:1.6;color:#53625a}
+.guided-current .guided-answer{display:none!important}
+.guided-current .teacher-answer{margin-top:9px}
