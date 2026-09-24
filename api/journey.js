@@ -3,8 +3,7 @@ title:{type:"string"},summary:{type:"string"},
 student:{type:"object",additionalProperties:false,properties:{grade:{type:"string"},topic:{type:"string"},task:{type:"string"}},required:["grade","topic","task"]},
 teacher:{type:"object",additionalProperties:false,properties:{lesson_goal:{type:"string"},mystery:{type:"string"},clue_strategy:{type:"string"}},required:["lesson_goal","mystery","clue_strategy"]},
 mystery:{type:"object",additionalProperties:false,properties:{title:{type:"string"},context:{type:"string"}},required:["title","context"]},
-clues:{type:"array",items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"}},required:["title","content"]}},
-exploration:{type:"object",additionalProperties:false,properties:{guiding_questions:{type:"array",items:{type:"string"}}},required:["guiding_questions"]},
+clues:{type:"array",items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"},guiding_questions:{type:"array",minItems:2,maxItems:3,items:{type:"string"}}},required:["title","content","guiding_questions"]}},
 standardization:{type:"object",additionalProperties:false,properties:{concept:{type:"string"},knowledge:{type:"string"}},required:["concept","knowledge"]},
 solution:{type:"object",additionalProperties:false,properties:{title:{type:"string"},steps:{type:"array",items:{type:"string"}}},required:["title","steps"]},
 practice:{type:"array",minItems:5,maxItems:5,items:{type:"object",additionalProperties:false,properties:{level:{type:"string"},problem:{type:"string"},guidance:{type:"string"},solution:{type:"string"},common_error:{type:"string"}},required:["level","problem","guidance","solution","common_error"]}},
@@ -17,6 +16,7 @@ Không coi yêu cầu này là một cuộc trò chuyện hỏi-đáp thông th�
 Nguyên tắc cốt lõi:
 - Bí ẩn chỉ tạo động lực/bối cảnh; không kể chuyện thay cho tư duy toán học.
 - Manh mối phải là dữ kiện, biểu thức, quan hệ hoặc quan sát toán học thật.
+- MỖI MANH MỐI phải có riêng 2–3 câu hỏi dẫn dắt bám sát trực tiếp vào chính nội dung của manh mối đó. Câu hỏi phải đi từ dễ đến khó, giúp học sinh quan sát → trả lời → phát hiện đúng điều mà manh mối muốn học sinh nhận ra. Không gom câu hỏi thành một danh sách chung cho toàn bộ bài. Không hỏi những điều chưa xuất hiện trong manh mối.
 - Khám phá theo mạch: Quan sát → dự đoán → tìm manh mối → thử → phát hiện quan hệ → giải thích → hình thành kiến thức.
 - Vùng khó phải được bẻ thành các câu hỏi nhỏ; không nhảy cóc.
 - Cuối hoạt động phải quay về kiến thức Toán chuẩn: kiến thức chốt, cách trình bày, năng lực/kĩ năng.
