@@ -78,6 +78,10 @@ function renderJourney(j){
     '<div class="practice-item"><b>Bài '+(i+1)+' — '+esc(p.level||'')+'</b><p>'+esc(p.problem||'')+'</p></div>'
   ).join('');
 
+  const problemMap=j.problem_map||{};
+  const mapBranches=(problemMap.branches||[]).map((b,i)=>
+    '<div class="pm-branch"><div class="pm-label">'+esc(b.label||('Phần '+(i+1)))+'</div><div class="pm-expression">'+esc(b.expression||'')+'</div></div>'
+  ).join('');
   const problemText=j.problem?.text||j.task||j.summary||'Bài toán cần khám phá';
   const evidenceLegend=(j.evidence||[]).map((e,i)=>
     '<span class="legend-item"><i>D'+(i+1)+'</i>'+esc(e.label||'Dấu vết '+(i+1))+'</span>'
@@ -87,6 +91,17 @@ function renderJourney(j){
     '<div class="journey-head"><div><h2>'+esc(j.title||'Hành Trình Khám Phá Toán')+'</h2><p>'+esc(j.summary||'')+'</p></div></div>'+
     '<div class="tree"><div class="branch"><h3>👨‍🎓 HỌC SINH</h3><ul><li>'+esc(j.student?.grade||'Chọn lớp 6–9')+'</li><li>'+esc(j.student?.topic||'Chọn chủ đề')+'</li><li>'+esc(j.student?.task||'Chọn bài toán')+'</li></ul></div>'+
     '<div class="branch"><h3>👨‍🏫 GIÁO VIÊN</h3><ul><li>'+esc(j.teacher?.lesson_goal||'Mục tiêu bài học')+'</li><li>'+esc(j.teacher?.mystery||'Bí ẩn')+'</li><li>'+esc(j.teacher?.clue_strategy||'Chiến lược khám phá')+'</li></ul></div></div>'+
+    '<div class="problem-map">'+
+      '<div class="pm-title"><span class="eyebrow">🧩 SƠ ĐỒ TÓM TẮT BÀI TOÁN</span></div>'+
+      '<div class="pm-diagram">'+
+        '<div class="pm-root">'+esc(problemMap.root||'Bài toán')+'</div>'+
+        '<div class="pm-vline"></div>'+
+        '<div class="pm-branches">'+mapBranches+'</div>'+
+        '<div class="pm-hub-line"></div>'+
+        '<div class="pm-conclusion"><div>'+esc(problemMap.conclusion_label||'Mối quan hệ')+'</div><strong>'+esc(problemMap.conclusion_value||'')+'</strong></div>'+
+      '</div>'+
+      '<div class="pm-explanation"><b>💡 Giải thích sơ đồ:</b> '+esc(problemMap.explanation||'')+'</div>'+
+    '</div>'+
     '<div class="anatomy">'+
       '<div class="anatomy-title"><span class="eyebrow">🧬 GIẢI PHẪU BÀI TOÁN</span><h3>Không đọc bài toán như một khối chữ — tách nó thành các dấu vết và lần theo chúng</h3></div>'+
       '<div class="anatomy-legend">'+evidenceLegend+'</div>'+
