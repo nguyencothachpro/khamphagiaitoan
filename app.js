@@ -81,60 +81,54 @@ function renderJourney(j){
   const problemMaps=j.problem_maps||[];
   const mapSteps=j.map_discovery_steps||[];
   const mapStepsByMap=problemMaps.map((_,mapIndex)=>mapSteps.filter(s=>Number(s.map_index)===mapIndex));
-  const guidedMapsHtml=mapStepsByMap.map((steps,mapIndex)=>{
-    if(!steps.length)return '';
-    const stepCards=steps.map((s,i)=>
-      '<div class="guided-step '+(i===0?'active':'locked')+'" data-step="'+i+'">'+
-        '<div class="guided-step-no">'+(i+1)+'</div>'+
-        '<div class="guided-step-body">'+
-          '<div class="guided-kicker">GV DẪN DẮT</div>'+
-          '<h4>'+esc(s.step_title||('Bước '+(i+1)))+'</h4>'+
-          '<div class="guided-question">❓ '+esc(s.teacher_question||'')+'</div>'+
-          '<div class="student-goal">🎯 Học sinh cần nhận ra: '+esc(s.student_goal||'')+'</div>'+
-          '<textarea class="guided-answer" rows="2" placeholder="Học sinh trả lời tại đây…"></textarea>'+
-          '<div class="guided-actions"><button class="hint-btn" type="button">💡 Gợi ý</button><button class="unlock-btn" type="button">✓ Học sinh đã trả lời → mở mảnh</button></div>'+
-          '<div class="guided-hint hidden">💡 '+esc(s.hint||'')+'</div>'+
-          '<div class="guided-wrong hidden">↩️ Nếu học sinh bí/sai: '+esc(s.if_wrong||'')+'</div>'+
-          '<details class="teacher-answer"><summary>👨‍🏫 Xem đáp án dành cho giáo viên</summary><div>'+esc(s.expected_answer||'')+'</div></details>'+
-          '<div class="unlocked-piece hidden">✨ Mảnh sơ đồ mở ra: <b>'+esc(s.unlock||'')+'</b></div>'+
-        '</div>'+
+
+  function buildProgressiveMap(problemMap,steps,mapIndex){
+    const root=esc(problemMap.root||'Bài toán');
+    const branches=(problemMap.branches||[]).map((b,i)=>
+      '<div class="pm-live-branch">'+
+        '<div class="pm-live-label" data-piece="'+esc(b.label||('Phần '+(i+1)))">'+esc(b.label||('Phần '+(i+1)))+'</div>'+
+        '<div class="pm-live-expression" data-piece="'+esc(b.expression||'')+'">'+esc(b.expression||'')+'</div>'+
       '</div>'
     ).join('');
-    return '<div class="guided-map" data-map="'+mapIndex+'"><div class="guided-map-head"><span>🎓</span><div><b>Tự dựng sơ đồ — Cách '+(mapIndex+1)+'</b><small>Giáo viên hỏi → học sinh suy luận → mở từng mảnh sơ đồ</small></div></div><div class="guided-steps">'+stepCards+'</div><div class="guided-complete hidden">🎉 Học sinh đã tự dựng xong sơ đồ. Bây giờ hãy hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div>';
-  }).join('');
-  const problemMapsHtml=problemMaps.map((problemMap,mapIndex)=>{
-    const mapBranches=(problemMap.branches||[]).map((b,i)=>
-      '<div class="pm-branch"><div class="pm-label">'+esc(b.label||('Phần '+(i+1)))+'</div><div class="pm-expression">'+esc(b.expression||'')+'</div></div>'
-    ).join('');
-    return '<div class="problem-map-card">'+
-      '<div class="pm-method"><span class="pm-method-no">'+(mapIndex+1)+'</span><div><b>'+esc(problemMap.method_title||('Cách giải '+(mapIndex+1)))+'</b><span>'+esc(problemMap.method_note||'')+'</span></div></div>'+
-      '<div class="pm-diagram">'+
-        '<div class="pm-root">'+esc(problemMap.root||'Bài toán')+'</div>'+
-        '<div class="pm-vline"></div>'+
-        '<div class="pm-branches">'+mapBranches+'</div>'+
-        '<div class="pm-hub-line"></div>'+
-        '<div class="pm-conclusion"><div>'+esc(problemMap.conclusion_label||'Mối quan hệ')+'</div><strong>'+esc(problemMap.conclusion_value||'')+'</strong></div>'+
+    const unlocks=steps.map(s=>esc(s.unlock||'')).join('|');
+    return '<div class="guided-map" data-map="'+mapIndex+'">'+
+      '<div class="guided-map-head"><span>🎓</span><div><b>Học sinh tự dựng sơ đồ — '+esc(problemMap.method_title||('Cách giải '+(mapIndex+1)))+'</b><small>'+esc(problemMap.method_note||'Giáo viên không đưa sơ đồ trước; học sinh tự mở từng mảnh từ câu hỏi.</small></div></div>'+
+      '<div class="guided-progress"><span class="progress-count">Bước 1/'+steps.length+'</span><div class="progress-track"><i style="width:0%"></i></div></div>'+
+      '<div class="pm-live-map" data-unlocks="'+unlocks+'">'+
+        '<div class="pm-live-root hidden" data-piece="'+root+'">'+root+'</div>'+
+        '<div class="pm-live-vline hidden"></div>'+
+        '<div class="pm-live-branches hidden">'+branches+'</div>'+
+        '<div class="pm-live-hub hidden"></div>'+
+        '<div class="pm-live-conclusion hidden"><div data-piece="'+esc(problemMap.conclusion_label||'')+'">'+esc(problemMap.conclusion_label||'')+'</div><strong data-piece="'+esc(problemMap.conclusion_value||'')+'">'+esc(problemMap.conclusion_value||'')+'</strong></div>'+
       '</div>'+
-      '<div class="pm-explanation"><b>💡 Chú giải:</b> '+esc(problemMap.explanation||'')+'</div>'+
+      '<div class="guided-current">'+
+        steps.map((s,i)=>
+          '<div class="guided-step-data" data-step="'+i+'" data-unlock="'+esc(s.unlock||'')+'" data-expected="'+esc(s.expected_answer||'')+'" data-hint="'+esc(s.hint||'')+'" data-wrong="'+esc(s.if_wrong||'')+'" data-question="'+esc(s.teacher_question||'')+'" data-title="'+esc(s.step_title||('Bước '+(i+1)))+'" data-goal="'+esc(s.student_goal||'')+'"></div>'
+        ).join('')+
+        '<div class="guided-live-kicker">GV DẪN DẮT — BƯỚC <span class="current-no">1</span></div>'+
+        '<h4 class="current-title">'+esc(steps[0]?.step_title||'Bắt đầu khám phá')+'</h4>'+
+        '<div class="guided-question current-question">❓ '+esc(steps[0]?.teacher_question||'')+'</div>'+
+        '<div class="student-goal current-goal">🎯 Học sinh cần nhận ra: '+esc(steps[0]?.student_goal||'')+'</div>'+
+        '<textarea class="guided-answer current-answer" rows="2" placeholder="Học sinh trả lời tại đây…"></textarea>'+
+        '<div class="guided-actions"><button class="hint-btn" type="button">💡 Gợi ý</button><button class="confirm-btn" type="button">✓ Học sinh đã suy luận → mở mảnh sơ đồ</button></div>'+
+        '<div class="guided-hint hidden current-hint"></div>'+
+        '<div class="guided-wrong hidden current-wrong"></div>'+
+        '<details class="teacher-answer"><summary>👨‍🏫 Giáo viên xem đáp án</summary><div class="current-expected"></div></details>'+
+        '<div class="unlocked-piece hidden current-unlock"></div>'+
+      '</div>'+
+      '<div class="guided-complete hidden"><div class="complete-badge">🎉 Học sinh đã tự dựng xong sơ đồ</div><div class="pm-final-explanation">💡 Chú giải: '+esc(problemMap.explanation||'')+'</div><div class="complete-next">Bây giờ hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div>'+
     '</div>';
-  }).join('');
-  const problemText=j.problem?.text||j.task||j.summary||'Bài toán cần khám phá';
-  const evidenceLegend=(j.evidence||[]).map((e,i)=>
-    '<span class="legend-item"><i>D'+(i+1)+'</i>'+esc(e.label||'Dấu vết '+(i+1))+'</span>'
-  ).join('');
+  }
 
+  const guidedMapsHtml=mapStepsByMap.map((steps,mapIndex)=>steps.length?buildProgressiveMap(problemMaps[mapIndex],steps,mapIndex):'').join('');
   journey.innerHTML=
     '<div class="journey-head"><div><h2>'+esc(j.title||'Hành Trình Khám Phá Toán')+'</h2><p>'+esc(j.summary||'')+'</p></div></div>'+
     '<div class="tree"><div class="branch"><h3>👨‍🎓 HỌC SINH</h3><ul><li>'+esc(j.student?.grade||'Chọn lớp 6–9')+'</li><li>'+esc(j.student?.topic||'Chọn chủ đề')+'</li><li>'+esc(j.student?.task||'Chọn bài toán')+'</li></ul></div>'+
     '<div class="branch"><h3>👨‍🏫 GIÁO VIÊN</h3><ul><li>'+esc(j.teacher?.lesson_goal||'Mục tiêu bài học')+'</li><li>'+esc(j.teacher?.mystery||'Bí ẩn')+'</li><li>'+esc(j.teacher?.clue_strategy||'Chiến lược khám phá')+'</li></ul></div></div>'+
-    '<div class="problem-maps">'+
-      '<div class="pm-title"><span class="eyebrow">🧩 SƠ ĐỒ TÓM TẮT BÀI TOÁN</span><h3>'+((problemMaps.length>1)?'Mỗi cách giải có một sơ đồ riêng':'Nhìn nhanh cấu trúc bài toán trước khi khám phá')+'</h3></div>'+
-      problemMapsHtml+
-    '</div>'+
-    (guidedMapsHtml?'<div class="guided-discovery">'+
-      '<div class="guided-title"><span class="eyebrow">🎓 GIÁO VIÊN DẪN HỌC SINH TỰ SUY LUẬN</span><h3>Không đưa sơ đồ trước — từng mảnh chỉ xuất hiện sau câu trả lời của học sinh</h3></div>'+
+    '<div class="guided-discovery">'+
+      '<div class="guided-title"><span class="eyebrow">🎓 GIÁO VIÊN DẪN HỌC SINH TỰ XÂY DỰNG SƠ ĐỒ</span><h3>Sơ đồ không xuất hiện sẵn — mỗi mảnh chỉ xuất hiện sau một lần suy luận</h3></div>'+
       guidedMapsHtml+
-    '</div>':'')+
+    '</div>'+
     '<div class="anatomy">'+
       '<div class="anatomy-title"><span class="eyebrow">🧬 GIẢI PHẪU BÀI TOÁN</span><h3>Không đọc bài toán như một khối chữ — tách nó thành các dấu vết và lần theo chúng</h3></div>'+
       '<div class="anatomy-legend">'+evidenceLegend+'</div>'+
@@ -163,24 +157,78 @@ function renderJourney(j){
 }
 function initGuidedMaps(){
   document.querySelectorAll('.guided-map').forEach(map=>{
-    const steps=[...map.querySelectorAll('.guided-step')];
-    steps.forEach((step,i)=>{
-      step.querySelector('.hint-btn')?.addEventListener('click',()=>{
-        step.querySelector('.guided-hint')?.classList.remove('hidden');
-        step.querySelector('.guided-wrong')?.classList.remove('hidden');
-      });
-      step.querySelector('.unlock-btn')?.addEventListener('click',()=>{
-        step.querySelector('.unlocked-piece')?.classList.remove('hidden');
-        step.classList.add('completed');
-        if(steps[i+1]){
-          steps[i+1].classList.remove('locked');
-          steps[i+1].classList.add('active');
-          setTimeout(()=>steps[i+1].scrollIntoView({behavior:'smooth',block:'center'}),80);
-        }else{
-          map.querySelector('.guided-complete')?.classList.remove('hidden');
+    const data=[...map.querySelectorAll('.guided-step-data')];
+    const root=map.querySelector('.pm-live-root');
+    const branches=map.querySelector('.pm-live-branches');
+    const vline=map.querySelector('.pm-live-vline');
+    const hub=map.querySelector('.pm-live-hub');
+    const conclusion=map.querySelector('.pm-live-conclusion');
+    const currentNo=map.querySelector('.current-no');
+    const title=map.querySelector('.current-title');
+    const question=map.querySelector('.current-question');
+    const goal=map.querySelector('.current-goal');
+    const answer=map.querySelector('.current-answer');
+    const hint=map.querySelector('.current-hint');
+    const wrong=map.querySelector('.current-wrong');
+    const expected=map.querySelector('.current-expected');
+    const unlockBox=map.querySelector('.current-unlock');
+    const progress=map.querySelector('.progress-count');
+    const progressBar=map.querySelector('.progress-track i');
+    const complete=map.querySelector('.guided-complete');
+    let index=0;
+
+    function renderStep(){
+      const d=data[index];
+      if(!d)return;
+      currentNo.textContent=index+1;
+      progress.textContent='Bước '+(index+1)+'/'+data.length;
+      progressBar.style.width=(index/data.length*100)+'%';
+      title.textContent=d.dataset.title||'';
+      question.innerHTML='❓ '+esc(d.dataset.question||'');
+      goal.textContent='🎯 Học sinh cần nhận ra: '+(d.dataset.goal||'');
+      answer.value='';
+      hint.classList.add('hidden'); wrong.classList.add('hidden'); unlockBox.classList.add('hidden');
+      hint.textContent='💡 '+(d.dataset.hint||'');
+      wrong.textContent='↩️ Nếu học sinh bí/sai: '+(d.dataset.wrong||'');
+      expected.textContent=d.dataset.expected||'';
+      map.querySelector('.confirm-btn').disabled=false;
+      answer.focus();
+    }
+    function reveal(unlock){
+      const key=String(unlock||'').trim().toLowerCase();
+      if(!key)return;
+      const els=map.querySelectorAll('[data-piece]');
+      let found=false;
+      els.forEach(el=>{
+        const value=String(el.getAttribute('data-piece')||'').trim().toLowerCase();
+        if(value===key || value.includes(key) || key.includes(value)){
+          el.classList.remove('hidden','piece-hidden'); el.classList.add('piece-revealed'); found=true;
         }
       });
+      if(index===0){root?.classList.remove('hidden');vline?.classList.remove('hidden')}
+      if(index>0){branches?.classList.remove('hidden')}
+      if(index>=data.length-1){hub?.classList.remove('hidden');conclusion?.classList.remove('hidden');}
+      unlockBox.innerHTML='✨ Mảnh sơ đồ vừa mở: <b>'+esc(unlock)+'</b>';
+      unlockBox.classList.remove('hidden');
+      progressBar.style.width=((index+1)/data.length*100)+'%';
+      return found;
+    }
+    map.querySelector('.hint-btn')?.addEventListener('click',()=>{
+      hint.classList.remove('hidden'); wrong.classList.remove('hidden');
     });
+    map.querySelector('.confirm-btn')?.addEventListener('click',()=>{
+      const unlock=data[index]?.dataset.unlock||'';
+      reveal(unlock);
+      if(index<data.length-1){
+        index++;
+        setTimeout(renderStep,350);
+      }else{
+        map.querySelector('.confirm-btn').disabled=true;
+        complete.classList.remove('hidden');
+        complete.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    });
+    renderStep();
   });
 }
 function addHistory(t){const d=document.createElement("div");d.className="history-item";d.textContent=t.slice(0,38);historyEl.prepend(d)}
