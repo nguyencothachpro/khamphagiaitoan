@@ -78,6 +78,7 @@ function renderJourney(j){
     '<div class="practice-item"><b>Bài '+(i+1)+' — '+esc(p.level||'')+'</b><p>'+esc(p.problem||'')+'</p></div>'
   ).join('');
 
+  const problemMaps=j.problem_maps||[];
   const mapSteps=j.map_discovery_steps||[];
   const mapStepsByMap=problemMaps.map((_,mapIndex)=>mapSteps.filter(s=>Number(s.map_index)===mapIndex));
   const guidedMapsHtml=mapStepsByMap.map((steps,mapIndex)=>{
@@ -101,7 +102,6 @@ function renderJourney(j){
     ).join('');
     return '<div class="guided-map" data-map="'+mapIndex+'"><div class="guided-map-head"><span>🎓</span><div><b>Tự dựng sơ đồ — Cách '+(mapIndex+1)+'</b><small>Giáo viên hỏi → học sinh suy luận → mở từng mảnh sơ đồ</small></div></div><div class="guided-steps">'+stepCards+'</div><div class="guided-complete hidden">🎉 Học sinh đã tự dựng xong sơ đồ. Bây giờ hãy hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div>';
   }).join('');
-  const problemMaps=j.problem_maps||[];
   const problemMapsHtml=problemMaps.map((problemMap,mapIndex)=>{
     const mapBranches=(problemMap.branches||[]).map((b,i)=>
       '<div class="pm-branch"><div class="pm-label">'+esc(b.label||('Phần '+(i+1)))+'</div><div class="pm-expression">'+esc(b.expression||'')+'</div></div>'
