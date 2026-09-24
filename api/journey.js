@@ -8,7 +8,7 @@ standardization:{type:"object",additionalProperties:false,properties:{concept:{t
 solution:{type:"object",additionalProperties:false,properties:{title:{type:"string"},steps:{type:"array",items:{type:"string"}}},required:["title","steps"]},
 practice:{type:"array",minItems:5,maxItems:5,items:{type:"object",additionalProperties:false,properties:{level:{type:"string"},problem:{type:"string"},guidance:{type:"string"},solution:{type:"string"},common_error:{type:"string"}},required:["level","problem","guidance","solution","common_error"]}},
 application:{type:"object",additionalProperties:false,properties:{title:{type:"string"},task:{type:"string"}},required:["title","task"]}
-},required:["title","summary","student","teacher","mystery","clues","exploration","standardization","solution","practice","application"]};
+},required:["title","summary","student","teacher","mystery","clues","standardization","solution","practice","application"]};
 
 const SYSTEM=`Bạn là bộ máy thiết kế HÀNH TRÌNH KHÁM PHÁ TOÁN cho giáo viên Toán THCS Việt Nam.
 Không coi yêu cầu này là một cuộc trò chuyện hỏi-đáp thông thường. Nhiệm vụ là biến bài toán/dữ kiện đầu vào thành một cấu trúc dạy học có thể hiển thị thành hành trình.
