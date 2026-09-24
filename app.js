@@ -113,11 +113,17 @@ function initGuidedMaps(){
     function reveal(value){
       const key=String(value||"").trim().toLowerCase();
       if(!key)return;
+      let matched=false;
       map.querySelectorAll("[data-piece]").forEach(el=>{
         const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
-        if(p===key||p.includes(key)||key.includes(p))el.classList.remove("hidden");
+        if(p && (p===key||p.includes(key)||key.includes(p))){el.classList.remove("hidden");matched=true;}
       });
-      if(index===0){root.classList.remove("hidden");vline.classList.remove("hidden");}
+      if(index===0){root.classList.remove("hidden");vline.classList.remove("hidden");matched=true;}
+      if(!matched && index>0){
+        const fallback=[...map.querySelectorAll(".pm-live-label.hidden,.pm-live-expression.hidden")];
+        const piece=fallback[Math.min(index-1,fallback.length-1)];
+        if(piece)piece.classList.remove("hidden");
+      }
       if(index>0)branches.classList.remove("hidden");
       if(index>=data.length-1){hub.classList.remove("hidden");conclusion.classList.remove("hidden");}
       unlock.innerHTML="✨ Mảnh sơ đồ vừa mở: <b>"+esc(value)+"</b>";unlock.classList.remove("hidden");
