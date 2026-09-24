@@ -30,71 +30,78 @@ attach.addEventListener("keydown",e=>{
   if(e.key==="Enter"||e.key===" "){e.preventDefault();file.click();}
 });
 
-async function handlePaste(e){
+function handlePaste(e){
   const cd=e.clipboardData;
   if(!cd)return;
 
   const items=Array.from(cd.items||[]);
+  const imageItems=items.filter(i=>i.kind==="file"&&String(i.type||"").startsWith("image/"));
   const directFiles=Array.from(cd.files||[]).filter(f=>f&&f.size);
-  const itemFiles=[];
-  for(const item of items){
-    if(item.kind==="file"){
-      try{
-        const f=item.getAsFile();
-        if(f&&f.size)itemFiles.push(f);
-      }catch(_){}
-    }
-  }
+  const itemFiles=items.map(i=>{try{return i.kind==="file"?i.getAsFile():null;}catch{return null;}}).filter(f=>f&&f.size);
 
+  const all=[...directFiles,...itemFiles];
   const unique=[];
   const seen=new Set();
-  for(const f of [...directFiles,...itemFiles]){
+  for(const f of all){
     const key=[f.name,f.size,f.type,f.lastModified].join("|");
     if(!seen.has(key)){seen.add(key);unique.push(f);}
   }
 
-  const imageFile=unique.find(f=>String(f.type||"").startsWith("image/"));
-  if(imageFile){
+  if(unique.length){
     e.preventDefault();
     e.stopPropagation();
-    addFiles([imageFile]);
-    status.textContent="Đã dán ảnh từ clipboard";
+    addFiles(unique);
+    status.textContent="Đã dán ảnh/tệp từ clipboard";
     return;
   }
 
-  // Một số Chrome/Windows không cung cấp File trực tiếp trong ClipboardEvent.
-  // Khi đó đọc ClipboardItem bằng Clipboard API, nhưng chỉ khi người dùng vừa thực hiện Ctrl+V.
-  const hasImageItem=items.some(i=>String(i.type||"").startsWith("image/"));
-  if(hasImageItem && navigator.clipboard?.read){
+  // Một số trình duyệt không trả File cho ảnh clipboard nhưng vẫn trả ClipboardItem.
+  // Đọc blob ngay sau sự kiện paste nếu có image/*.
+  if(imageItems.length){
     e.preventDefault();
     e.stopPropagation();
+    const item=imageItems[0];
     try{
-      const clipboardItems=await navigator.clipboard.read();
-      for(const item of clipboardItems){
-        const type=(item.types||[]).find(t=>String(t).startsWith("image/"));
-        if(!type)continue;
-        const blob=await item.getType(type);
-        if(blob&&blob.size){
-          const ext=(type.split("/")[1]||"png").replace("jpeg","jpg");
-          addFiles([new File([blob],"anh-clipboard."+ext,{type,lastModified:Date.now()})]);
-          status.textContent="Đã dán ảnh từ clipboard";
-          return;
-        }
-      }
-      throw new Error("Clipboard không còn chứa ảnh.");
-    }catch(err){
-      status.textContent="Không đọc được ảnh clipboard. Hãy thử Ctrl+C lại ảnh rồi Ctrl+V.";
-      return;
-    }
+      const blob=item.getAsFile();
+      if(blob){addFiles([blob]);status.textContent="Đã dán ảnh từ clipboard";return;}
+    }catch(_){}
+    status.textContent="Đang đọc ảnh clipboard…";
+    pasteImageFromClipboard();
+    return;
   }
 
   const text=cd.getData("text/plain")||"";
   if(text && document.activeElement!==promptEl){
     e.preventDefault();
-    promptEl.value=(promptEl.value?"\\n":"")+text;
+    promptEl.value=(promptEl.value?"\n":"")+text;
     promptEl.dispatchEvent(new Event("input",{bubbles:true}));
     promptEl.focus();
     status.textContent="Đã dán nội dung vào ô nhập";
+  }
+}
+async function pasteImageFromClipboard(){
+  try{
+    if(!navigator.clipboard || !navigator.clipboard.read){
+      status.textContent="Trình duyệt không hỗ trợ đọc clipboard, hãy bấm + để chọn ảnh.";
+      return;
+    }
+    const items=await navigator.clipboard.read();
+    const found=[];
+    for(const item of items){
+      const imgType=item.types.find(t=>t.startsWith("image/"));
+      if(!imgType)continue;
+      const blob=await item.getType(imgType);
+      const ext=(imgType.split("/")[1]||"png").split("+")[0];
+      found.push(new File([blob],"clipboard-"+Date.now()+"."+ext,{type:imgType}));
+    }
+    if(found.length){
+      addFiles(found);
+      status.textContent="Đã dán ảnh từ clipboard";
+    }else{
+      status.textContent="Không tìm thấy ảnh trong clipboard";
+    }
+  }catch(err){
+    status.textContent="Không thể đọc clipboard (trình duyệt chặn quyền, hãy thử lại hoặc dùng nút +)";
   }
 }
 window.addEventListener("paste",handlePaste,true);
@@ -243,8 +250,8 @@ function initGuidedMaps(){
       }
     };
     renderStep();
-
-
+  });
+}
 
 function renderConceptMaps(maps,steps){
   if(!maps?.length)return "";
