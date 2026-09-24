@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s);
-const promptEl=$("#prompt"),send=$("#send"),attach=$("#attach"),pasteImage=$("#pasteImage"),file=$("#file"),filesEl=$("#files"),journey=$("#journey"),intro=$("#intro"),status=$("#status"),provider=$("#provider"),historyEl=$("#history");
+const promptEl=$("#prompt"),send=$("#send"),attach=$("#attach"),file=$("#file"),filesEl=$("#files"),journey=$("#journey"),intro=$("#intro"),status=$("#status"),provider=$("#provider"),historyEl=$("#history");
 let files=[];
 
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -29,24 +29,6 @@ file.addEventListener("change",e=>{
 attach.addEventListener("keydown",e=>{
   if(e.key==="Enter"||e.key===" "){e.preventDefault();file.click();}
 });
-
-async function pasteImageFromClipboard(){
-  try{
-    if(!navigator.clipboard?.read) throw new Error("Trình duyệt không cho đọc ảnh từ clipboard bằng nút này.");
-    const items=await navigator.clipboard.read();
-    const imageItem=items.find(item=>item.types?.some(t=>t.startsWith("image/")));
-    if(!imageItem) throw new Error("Clipboard hiện không có ảnh. Hãy chụp ảnh rồi Ctrl+C trước.");
-    const type=imageItem.types.find(t=>t.startsWith("image/"));
-    const blob=await imageItem.getType(type);
-    const ext=(type.split("/")[1]||"png").replace("jpeg","jpg");
-    const f=new File([blob],"anh-clipboard."+ext,{type,lastModified:Date.now()});
-    addFiles([f]);
-    status.textContent="Đã lấy ảnh từ clipboard";
-  }catch(err){
-    status.textContent=err.message||"Không đọc được ảnh từ clipboard";
-  }
-}
-pasteImage?.addEventListener("click",pasteImageFromClipboard);
 
 function handlePaste(e){
   const cd=e.clipboardData;
