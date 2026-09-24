@@ -1,3 +1,4 @@
+import { inflateRawSync } from "node:zlib";
 const SCHEMA={type:"object",additionalProperties:false,properties:{
 title:{type:"string"},summary:{type:"string"},content_type:{type:"string",enum:["problem","theory","mixed"]},
 student:{type:"object",additionalProperties:false,properties:{grade:{type:"string"},topic:{type:"string"},task:{type:"string"}},required:["grade","topic","task"]},
@@ -78,11 +79,52 @@ export default async function handler(req,res){
  }catch(e){console.error(e);return res.status(500).json({error:e.message||"Lỗi máy chủ."})}
 }
 
+function decodeDataUrl(data){
+ const m=String(data||"").match(/^data:[^;]+;base64,(.*)$/s);
+ return m?Buffer.from(m[1],"base64"):Buffer.from("");
+}
+function decodeXml(s){
+ return s.replace(/<w:tab\s*\/?>/g,"\t").replace(/<w:br\s*\/?>/g,"\n").replace(/<[^>]+>/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\\s+/g," ").trim();
+}
+function extractDocxText(data){
+ const b=decodeDataUrl(data);
+ const sig=Buffer.from("PK\\x03\\x04","binary");
+ for(let p=0;p<b.length-4;p++){
+   if(b[p]===0x50&&b[p+1]===0x4b&&b[p+2]===0x03&&b[p+3]===0x04){
+     const method=b.readUInt16LE(p+8),compressed=b.readUInt32LE(p+18),nameLen=b.readUInt16LE(p+26),extraLen=b.readUInt16LE(p+28);
+     const name=b.slice(p+30,p+30+nameLen).toString("utf8");
+     if(name==="word/document.xml"){
+       const start=p+30+nameLen+extraLen,chunk=b.slice(start,start+compressed);
+       const xml=method===8?inflateRawSync(chunk):chunk;
+       return decodeXml(xml.toString("utf8"));
+     }
+     p+=30+nameLen+extraLen+compressed-1;
+   }
+ }
+ return "";
+}
+function extractTextFile(data){
+ return decodeDataUrl(data).toString("utf8");
+}
+async function normalizeFile(f){
+ const type=f.type||"";
+ if(type==="text/plain"||type==="text/markdown"||/\\.(txt|md)$/i.test(f.name||"")) return extractTextFile(f.data);
+ if(type==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"||/\\.docx$/i.test(f.name||"")) return extractDocxText(f.data);
+ return "";
+}
+
 async function openai(text,files,apiKey){
  const key=apiKey||process.env.OPENAI_API_KEY;
  if(!key)throw new Error("Chưa có OpenAI API key. Hãy nhập key ở nút 🔑 API key.");
  const content=[{type:"input_text",text}];
- for(const f of files){if(f.type.startsWith("image/"))content.push({type:"input_image",image_url:f.data});else if(f.type==="application/pdf")content.push({type:"input_file",filename:f.name,file_data:f.data});}
+ for(const f of files){
+   if(f.type.startsWith("image/"))content.push({type:"input_image",image_url:f.data});
+   else if(f.type==="application/pdf")content.push({type:"input_file",filename:f.name,file_data:f.data});
+   else {
+     const extracted=await normalizeFile(f);
+     if(extracted) content.push({type:"input_text",text:"\\n\\n--- TỆP "+f.name+" ---\\n"+extracted});
+   }
+ }
  const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({
   model:process.env.OPENAI_MODEL||"gpt-5.6-luna",instructions:SYSTEM,input:[{role:"user",content}],
   text:{format:{type:"json_schema",name:"math_journey",strict:true,schema:SCHEMA}}
@@ -95,7 +137,13 @@ async function gemini(text,files,apiKey){
  const key=apiKey||process.env.GEMINI_API_KEY;
  if(!key)throw new Error("Chưa có Gemini API key. Hãy nhập key ở nút 🔑 API key.");
  const parts=[{text}];
- for(const f of files){if(f.type.startsWith("image/")||f.type==="application/pdf")parts.push({inline_data:{mime_type:f.type,data:f.data.split(",")[1]}});}
+ for(const f of files){
+   if(f.type.startsWith("image/")||f.type==="application/pdf")parts.push({inline_data:{mime_type:f.type,data:f.data.split(",")[1]}});
+   else {
+     const extracted=await normalizeFile(f);
+     if(extracted) parts.push({text:"\\n\\n--- TỆP "+f.name+" ---\\n"+extracted});
+   }
+ }
  const geminiSchema=toGeminiSchema(SCHEMA);
  const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+(process.env.GEMINI_MODEL||"gemini-3.8-flash")+":generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts}],systemInstruction:{parts:[{text:SYSTEM}]},generationConfig:{response_mime_type:"application/json",response_schema:geminiSchema}})});
  const d=await r.json();if(!r.ok)throw new Error(d.error?.message||"Gemini API lỗi");
