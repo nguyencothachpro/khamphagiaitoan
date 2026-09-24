@@ -3,3 +3,69 @@
 .synthesis{border-left:4px solid #6f6a54;background:#fffdf6}.solution-paper{border-left:4px solid #8c6ccf}.hand-paper{margin-top:12px;padding:28px 34px 34px;min-height:300px;border:1px solid #e1d8bd;border-radius:4px;background-color:#fffef8;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(90,125,180,.14) 32px);box-shadow:0 7px 18px rgba(70,55,35,.08);font-family:"Segoe Print","Bradley Hand","Comic Sans MS",cursive;color:#263d63;position:relative}.hand-paper:before{content:"";position:absolute;left:24px;top:0;bottom:0;width:1px;background:rgba(210,95,95,.18)}.hand-title{font-size:22px;font-weight:700;margin-bottom:18px;text-decoration:underline;text-decoration-thickness:1px}.hand-step{margin:0 0 16px;padding-left:18px}.hand-label{font-weight:700;font-size:15px;margin-bottom:3px}.hand-content{font-size:15px;line-height:1.95;white-space:pre-wrap}.hand-why{font-size:13px;line-height:1.7;opacity:.82;margin-top:2px}.hand-final{margin-top:20px;font-size:16px;font-weight:700;line-height:1.9}.clue-questions{margin-top:9px}.clue-questions .question{margin-top:6px;background:#f7f7fb}.clue{background:#fcfcfd}
 
 .autopsy{border-left:4px solid #5d55c9}.clue-stage{border-left:4px solid #c47a35}.discovery-stage{border-left:4px solid #2f9b70}.connection-stage{border-left:4px solid #8c6ccf}.evidence-list,.discoveries,.connections{display:flex;flex-direction:column;gap:9px;margin-top:12px}.evidence-item,.discovery,.connection{display:flex;gap:11px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fcfcfd}.node{width:31px;height:31px;flex:0 0 31px;border-radius:50%;display:grid;place-items:center;background:#f0efff;color:#5d55c9;font-size:10px;font-weight:800}.evidence-item b,.discovery b{font-size:12px}.quote{margin-top:4px;font-size:12px;color:#4d4f57;font-style:italic}.evidence-item p,.discovery p,.connection p{margin:5px 0;font-size:11px;color:#777;line-height:1.55}.from{font-size:10px;color:#a06d37;margin:5px 0}.clue{padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:9px}.clue-head{display:flex;align-items:center;gap:9px}.clue-head .node{background:#fff1e5;color:#b56b25}.clue-head b{font-size:12px}.clue .question{margin-top:7px}.hint{margin-top:8px;padding:8px 10px;border-radius:9px;background:#fff9ed;color:#8a6a37;font-size:11px}.expected{margin-top:7px;padding:8px 10px;border-radius:9px;background:#effaf4;color:#37775a;font-size:11px}.why{margin-top:7px;padding-top:6px;border-top:1px dashed #ddd;color:#696b73;font-size:10px}.connection{background:#faf8ff}.connection b{font-size:11px;color:#6559a9}.reveal{margin-top:13px;padding:15px;border-radius:13px;background:linear-gradient(135deg,#f7f5ff,#fffdf4);border:1px solid #ddd8f5}.reveal b{font-size:15px;color:#5148aa}.reveal p{font-size:12px;line-height:1.7;color:#666}.reveal strong{display:block;font-size:14px;color:#3f3d55}.solution-paper{background:#fff}
+
+/* ===== GIẢI PHẪU BÀI TOÁN — SƠ ĐỒ ĐIỀU TRA ===== */
+.anatomy{margin:8px 0 28px;padding:22px 20px 26px;border:1px solid #dedee8;border-radius:22px;background:linear-gradient(180deg,#fbfbff 0%,#fff 100%);box-shadow:0 12px 35px rgba(54,48,100,.07);position:relative;overflow:hidden}
+.anatomy:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,#e7e3f6 12%,#e7e3f6 88%,transparent);opacity:.7;pointer-events:none}
+.anatomy-title{text-align:center;position:relative;z-index:1}
+.anatomy-title .eyebrow{color:#5d55c9}
+.anatomy-title h3{margin:7px auto 0;max-width:720px;font-size:18px;line-height:1.4}
+.anatomy-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:15px auto 20px;position:relative;z-index:1}
+.legend-item{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid #e2e1eb;border-radius:999px;background:#fff;color:#73747d;font-size:10px}
+.legend-item i{font-style:normal;font-weight:800;color:#5d55c9}
+.an-stage{position:relative;z-index:1}
+.stage-label{text-align:center;font-size:10px;font-weight:850;letter-spacing:.12em;color:#77728e;margin:4px 0 10px;text-transform:uppercase}
+.problem-stage{display:flex;flex-direction:column;align-items:center}
+.an-core{width:min(720px,92%);padding:18px 21px;border:2px solid #7168d7;border-radius:18px;background:#fff;box-shadow:0 8px 25px rgba(93,85,201,.12);position:relative;text-align:center}
+.core-kicker{font-size:10px;font-weight:850;letter-spacing:.12em;color:#5d55c9}
+.core-text{margin-top:8px;font-size:14px;line-height:1.65;color:#33353b}
+.core-mystery{margin-top:12px;padding:8px 11px;border-radius:10px;background:#fff7e9;color:#8c672e;font-size:11px}
+.an-arrow{font-size:22px;line-height:26px;color:#aaa5bc;margin:5px 0}
+.an-grid{display:grid;gap:12px;width:100%}
+.evidence-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.clue-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.an-node{position:relative;padding:13px;border-radius:15px;background:#fff;border:1px solid #dfdfe7;box-shadow:0 5px 16px rgba(30,30,55,.045);min-width:0}
+.an-node:before{content:"";position:absolute;top:-13px;left:50%;width:1px;height:13px;background:#cbc8d7}
+.an-node-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.an-node .node{width:29px;height:29px;flex-basis:29px}
+.an-type{font-size:9px;font-weight:850;letter-spacing:.1em;color:#8a8797}
+.an-node>b{font-size:12px;line-height:1.35}
+.an-node p{font-size:11px;line-height:1.55;color:#73747c;margin:6px 0 0}
+.evidence-node{border-top:3px solid #7168d7}
+.evidence-node .quote{font-size:11px;line-height:1.5}
+.clue-node{border-top:3px solid #d08438}
+.clue-node .node{background:#fff0df;color:#b56b25}
+.discovery-node{border-top:3px solid #3e9d75}
+.discovery-node .node{background:#eaf8f1;color:#2f8b67}
+.discovery-node small{display:block;margin-top:7px;color:#8a8a92;font-size:9.5px}
+.discovery-node .why{font-size:10px}
+.an-connector{text-align:center;color:#aaa5b6;font-size:20px;line-height:1.2;margin:9px 0;position:relative;z-index:1}
+.an-connector span{display:inline-block;margin:0 7px;padding:4px 9px;border-radius:999px;background:#f5f4fa;color:#777284;font-size:9px;vertical-align:middle;letter-spacing:.03em}
+.an-connector.split{font-size:25px;color:#9a95aa}
+.connection-stage-map{padding:0 5%}
+.connection-map{max-width:760px;margin:0 auto;border-left:2px solid #d9d3ee;padding-left:15px}
+.connection-line{display:grid;grid-template-columns:25px minmax(70px,auto) 22px minmax(70px,auto) 1fr;align-items:center;gap:7px;padding:10px 12px;margin:7px 0;border:1px solid #e3e0ef;border-radius:11px;background:#fcfbff;font-size:10px;color:#514b77}
+.conn-dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#eeeafb;color:#6c60b7;font-size:9px;font-weight:800}
+.conn-arrow{font-size:15px;color:#9b93bb;text-align:center}
+.conn-reason{grid-column:2/-1;color:#77747f;line-height:1.45;padding-top:3px}
+.connection-stage-map .reveal{max-width:760px;margin:14px auto 0}
+.clue-detail{margin-top:8px}
+.clue-detail summary{cursor:pointer;color:#6258ad;font-size:10px;font-weight:700;padding:5px 0}
+.clue-detail .question{margin-top:6px}
+.clue-detail .hint{margin-top:7px}
+/* Học sinh không nhìn thấy đáp án trước khi khám phá */
+.expected{display:none!important}
+@media(max-width:850px){
+  .evidence-grid,.clue-grid,.discovery-grid{grid-template-columns:1fr 1fr}
+  .anatomy:before{display:none}
+}
+@media(max-width:600px){
+  .anatomy{padding:17px 11px}
+  .evidence-grid,.clue-grid,.discovery-grid{grid-template-columns:1fr}
+  .an-core{width:100%}
+  .connection-stage-map{padding:0}
+  .connection-line{grid-template-columns:24px 1fr}
+  .conn-arrow{display:none}
+  .conn-reason{grid-column:2}
+}
