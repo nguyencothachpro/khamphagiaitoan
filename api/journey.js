@@ -27,10 +27,10 @@ BỐN TẦNG BẮT BUỘC:
 
 SƠ ĐỒ GIẢI PHẪU NGẮN Ở ĐẦU BÀI:
 - Tạo thêm problem_maps ngay sau phần bí ẩn. Đây là các bản đồ cực ngắn để học sinh nhìn thấy cấu trúc bài toán trước khi đi vào điều tra chi tiết.
-- Mỗi phần tử problem_maps tương ứng với MỘT CÁCH GIẢI KHÁC NHAU nhưng hợp lệ và có ý nghĩa sư phạm; không tạo nhiều sơ đồ nếu các cách thực chất giống nhau. method_title nêu tên cách giải, method_note nói ngắn gọn điểm khác biệt của cách đó. root là đại lượng/thời gian/đối tượng lớn nhất của bài toán, branches là các phần tách ra từ root theo đúng quan hệ trong đề; expression là biểu diễn ngắn gọn (ví dụ “3x”, “7(x+5)”).
+- Mỗi phần tử problem_maps tương ứng với MỘT CÁCH GIẢI KHÁC NHAU nhưng hợp lệ và có ý nghĩa sư phạm; không tạo nhiều sơ đồ nếu các cách thực chất giống nhau. method_title nêu tên cách giải, method_note nói ngắn gọn điểm khác biệt của cách đó. root là ĐỐI TƯỢNG GỐC mà học sinh nhìn thấy đầu tiên trong đề (thường là tổng số ngày, tổng quãng đường, tổng số sản phẩm, hình ban đầu...), branches là các phần được tách ra từ root theo đúng câu chữ của đề, là các phần tách ra từ root theo đúng quan hệ trong đề; expression là biểu diễn ngắn gọn (ví dụ “3x”, “7(x+5)”).
 - conclusion_label và conclusion_value là điểm hội tụ của các nhánh (ví dụ “TỔNG SẢN LƯỢNG” và “335”).
 - explanation giải thích bằng lời vì sao sơ đồ này được lập như vậy, không giải bài và không bỏ qua phần khám phá.
-- Mỗi sơ đồ phải ngắn, dễ nhìn, ưu tiên 1 root → các nhánh → 1 điểm hội tụ. Nếu bài toán chỉ có một cách giải tự nhiên thì chỉ tạo một sơ đồ. Nếu có từ hai cách giải thực sự khác nhau thì tạo các sơ đồ tương ứng và chú giải riêng cho từng sơ đồ. Không ép tạo nhiều cách giải.
+- Mỗi sơ đồ phải ngắn, dễ nhìn và ĐỌC TỪ TRÊN XUỐNG: root ở trên cùng → các nhánh ở giữa → biểu diễn của từng nhánh → điểm hội tụ ở dưới cùng. Ví dụ nếu đề nói “10 ngày gồm 3 ngày đầu và 7 ngày tiếp theo”, sơ đồ phải có “10 NGÀY” ở trên, tách thành “3 ngày” và “7 ngày”, dưới mỗi nhánh mới ghi “3x” và “7(x+5)”, rồi hai nhánh hội tụ vào “TỔNG SẢN LƯỢNG → 335”. Sơ đồ chỉ mô tả cấu trúc và quan hệ dữ kiện, KHÔNG biến thành sơ đồ biến đổi phương trình và KHÔNG tự đưa phép tính trung gian như “10x + 35 = 335” vào sơ đồ. Nếu bài toán chỉ có một cách giải tự nhiên thì chỉ tạo một sơ đồ. Nếu có từ hai cách giải thực sự khác nhau thì tạo các sơ đồ tương ứng và chú giải riêng cho từng sơ đồ. Không ép tạo nhiều cách giải.
 
 QUY TẮC SƯ PHẠM:
 - Không đặt x, không lập phương trình, không đưa công thức giải ngay từ đầu nếu học sinh chưa có đủ lý do để đi đến đó.
