@@ -238,11 +238,9 @@ function initGuidedMaps(){
     };
     map.querySelector(".confirm-btn").onclick=()=>{
       if(index<data.length-1){
-        reveal(data[index].unlock||"");
         index++;
         setTimeout(renderStep,180);
       }else{
-        reveal(data[index].unlock||"");
         setMapState(index);
         complete.classList.remove("hidden");
         bar.style.width="100%";
