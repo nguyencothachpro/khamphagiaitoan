@@ -199,3 +199,7 @@
 .pm-live-reason span{display:block}
 .pm-live-branch .pm-live-label.hidden~.pm-live-reason,
 .pm-live-branch .pm-live-expression.hidden~.pm-live-reason{display:none}
+
+.guided-actions .prev-btn{border-color:#c9c5d9;color:#5f5a73;background:#faf9fc}
+.guided-actions .prev-btn:not(:disabled):hover{border-color:#7168d7;background:#f3f1ff}
+.guided-actions .prev-btn:disabled{opacity:.35;cursor:not-allowed}
