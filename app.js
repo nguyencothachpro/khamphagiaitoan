@@ -88,7 +88,7 @@ function buildProgressiveMap(map,steps,index){
   const branches=(map.branches||[]).map((b,i)=>{const label=b.label||("Phần "+(i+1));const expression=b.expression||"";const reason=b.reason||"Đây là cách diễn tả phần này từ dữ kiện của đề bài.";return '<div class="pm-live-branch" data-branch-index="'+i+'"><div class="pm-live-label hidden" data-piece="'+esc(label)+'">'+esc(label)+'</div><div class="pm-live-expression hidden" data-piece="'+esc(expression)+'">'+esc(expression)+'</div><div class="pm-live-reason hidden">💬 <span>'+esc(reason)+'</span></div></div>';}).join("");
   window.__KHAM_PHA_GUIDED = window.__KHAM_PHA_GUIDED || {};
   window.__KHAM_PHA_GUIDED[index] = steps;
-  return '<div class="guided-map" data-map="'+index+'"><div class="guided-map-head"><span>🎓</span><div><b>Giáo viên thiết kế đường suy luận — '+esc(map.method_title||("Cách giải "+(index+1)))+'</b><small>'+esc(map.method_note||"Giáo viên hỏi → học sinh suy luận → sơ đồ hình thành.")+'</small></div></div><div class="guided-progress"><span class="progress-count">Bước 1/'+steps.length+'</span><div class="progress-track"><i style="width:0%"></i></div></div><div class="pm-live-map"><div class="pm-live-root hidden" data-piece="'+esc(map.root||"Bài toán")+'">'+esc(map.root||"Bài toán")+'</div><div class="pm-live-vline hidden"></div><div class="pm-live-branches hidden">'+branches+'</div><div class="pm-live-hub hidden"></div><div class="pm-live-conclusion hidden"><div data-piece="'+esc(map.conclusion_label||"")+'">'+esc(map.conclusion_label||"")+'</div><strong data-piece="'+esc(map.conclusion_value||"")+'">'+esc(map.conclusion_value||"")+'</strong></div></div><div class="guided-current"><div class="guided-live-kicker">GV NGHIÊN CỨU — BƯỚC <span class="current-no">1</span></div><h4 class="current-title"></h4><div class="guided-question current-question"></div><div class="student-goal current-goal"></div><div class="teacher-expected"><span>🧠 Học sinh dự kiến tự nhận ra</span><b class="current-expected"></b></div><div class="guided-actions"><button class="hint-btn" type="button">💡 Xem gợi ý sư phạm</button><button class="confirm-btn" type="button">▶ Xem bước tiếp theo → mở mảnh sơ đồ</button></div><div class="guided-hint hidden current-hint"></div><div class="guided-wrong hidden current-wrong"></div><details class="teacher-answer"><summary>👨‍🏫 Chi tiết thiết kế bước dạy</summary><div class="current-design"></div></details><div class="unlocked-piece hidden current-unlock"></div></div><div class="guided-complete hidden"><div class="complete-badge">🎉 Học sinh đã tự dựng xong sơ đồ</div><div class="pm-final-explanation">💡 Chú giải: '+esc(map.explanation||"")+'</div><div class="complete-next">Bây giờ hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div></div>';
+  return '<div class="guided-map" data-map="'+index+'"><div class="guided-map-head"><span>🎓</span><div><b>Giáo viên thiết kế đường suy luận — '+esc(map.method_title||("Cách giải "+(index+1)))+'</b><small>'+esc(map.method_note||"Giáo viên hỏi → học sinh suy luận → sơ đồ hình thành.")+'</small></div></div><div class="guided-progress"><span class="progress-count">Bước 1/'+steps.length+'</span><div class="progress-track"><i style="width:0%"></i></div></div><div class="pm-live-map"><div class="pm-live-root hidden" data-piece="'+esc(map.root||"Bài toán")+'">'+esc(map.root||"Bài toán")+'</div><div class="pm-live-vline hidden"></div><div class="pm-live-branches hidden">'+branches+'</div><div class="pm-live-hub hidden"></div><div class="pm-live-conclusion hidden"><div data-piece="'+esc(map.conclusion_label||"")+'">'+esc(map.conclusion_label||"")+'</div><strong data-piece="'+esc(map.conclusion_value||"")+'">'+esc(map.conclusion_value||"")+'</strong></div></div><div class="guided-current"><div class="guided-live-kicker">GV NGHIÊN CỨU — BƯỚC <span class="current-no">1</span></div><h4 class="current-title"></h4><div class="guided-question current-question"></div><div class="student-goal current-goal"></div><div class="teacher-expected"><span>🧠 Học sinh dự kiến tự nhận ra</span><b class="current-expected"></b></div><div class="guided-actions"><button class="prev-btn" type="button">← Xem lại bước trước</button><button class="hint-btn" type="button">💡 Xem gợi ý sư phạm</button><button class="confirm-btn" type="button">▶ Xem bước tiếp theo → mở mảnh sơ đồ</button></div><div class="guided-hint hidden current-hint"></div><div class="guided-wrong hidden current-wrong"></div><details class="teacher-answer"><summary>👨‍🏫 Chi tiết thiết kế bước dạy</summary><div class="current-design"></div></details><div class="unlocked-piece hidden current-unlock"></div></div><div class="guided-complete hidden"><div class="complete-badge">🎉 Học sinh đã tự dựng xong sơ đồ</div><div class="pm-final-explanation">💡 Chú giải: '+esc(map.explanation||"")+'</div><div class="complete-next">Bây giờ hỏi: <b>“Các mảnh này liên hệ với nhau thế nào để tạo thành cách giải?”</b></div></div></div>';
 }
 
 function initGuidedMaps(){
@@ -98,6 +98,29 @@ function initGuidedMaps(){
     if(!data.length){map.querySelector(".guided-current").innerHTML='<div class="guided-empty">Chưa có đủ bước khám phá cho sơ đồ này.</div>';return;}
     const root=map.querySelector(".pm-live-root"),branches=map.querySelector(".pm-live-branches"),vline=map.querySelector(".pm-live-vline"),hub=map.querySelector(".pm-live-hub"),conclusion=map.querySelector(".pm-live-conclusion");
     const no=map.querySelector(".current-no"),title=map.querySelector(".current-title"),question=map.querySelector(".current-question"),goal=map.querySelector(".current-goal"),hint=map.querySelector(".current-hint"),wrong=map.querySelector(".current-wrong"),expected=map.querySelector(".current-expected"),design=map.querySelector(".current-design"),unlock=map.querySelector(".current-unlock"),count=map.querySelector(".progress-count"),bar=map.querySelector(".progress-track i"),complete=map.querySelector(".guided-complete");
+
+    function setMapState(targetIndex){
+      // Dựng lại sơ đồ đúng trạng thái của bước targetIndex để có thể xem lại từng bước.
+      root.classList.add("hidden");vline.classList.add("hidden");branches.classList.add("hidden");hub.classList.add("hidden");conclusion.classList.add("hidden");
+      map.querySelectorAll(".pm-live-label,.pm-live-expression,.pm-live-reason").forEach(el=>el.classList.add("hidden"));
+      if(targetIndex<0)return;
+      for(let s=0;s<=targetIndex;s++){
+        const value=String(data[s]?.unlock||"").trim().toLowerCase();
+        if(s===0){root.classList.remove("hidden");vline.classList.remove("hidden");}
+        let matched=false;
+        map.querySelectorAll("[data-piece]").forEach(el=>{
+          const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
+          if(p && value && (p===value||p.includes(value)||value.includes(p))){el.classList.remove("hidden");const branch=el.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");matched=true;}
+        });
+        if(s>0)branches.classList.remove("hidden");
+        if(!matched && s>0){
+          const fallback=[...map.querySelectorAll(".pm-live-label.hidden,.pm-live-expression.hidden")];
+          const piece=fallback[Math.min(s-1,fallback.length-1)];
+          if(piece){piece.classList.remove("hidden");const branch=piece.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");}
+        }
+      }
+      if(targetIndex>=data.length-1){hub.classList.remove("hidden");conclusion.classList.remove("hidden");}
+    }
 
     function renderStep(){
       const d=data[index];if(!d)return;
@@ -109,35 +132,37 @@ function initGuidedMaps(){
       design.innerHTML="<b>Mục tiêu:</b> "+esc(d.student_goal||"")+"<br><b>Nếu học sinh bí/sai:</b> "+esc(d.if_wrong||"")+"<br><b>Mảnh sơ đồ mở ra:</b> "+esc(d.unlock||"");
       hint.textContent="💡 "+(d.hint||"");wrong.textContent="↩️ Nếu học sinh bí/sai: "+(d.if_wrong||"");
       hint.classList.add("hidden");wrong.classList.add("hidden");unlock.classList.add("hidden");
-    }
-    function reveal(value){
-      const key=String(value||"").trim().toLowerCase();
-      if(!key)return;
-      let matched=false;
-      map.querySelectorAll("[data-piece]").forEach(el=>{
-        const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
-        if(p && (p===key||p.includes(key)||key.includes(p))){el.classList.remove("hidden");const branch=el.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");matched=true;}
-      });
-      if(index===0){root.classList.remove("hidden");vline.classList.remove("hidden");matched=true;}
-      if(!matched && index>0){
-        const fallback=[...map.querySelectorAll(".pm-live-label.hidden,.pm-live-expression.hidden")];
-        const piece=fallback[Math.min(index-1,fallback.length-1)];
-        if(piece){piece.classList.remove("hidden");const branch=piece.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");}
+      const prev=map.querySelector(".prev-btn"),next=map.querySelector(".confirm-btn");
+      prev.disabled=index===0;
+      next.disabled=false;
+      next.textContent=index>=data.length-1?"↻ Hoàn thành lại bước này":"▶ Xem bước tiếp theo → mở mảnh sơ đồ";
+      complete.classList.add("hidden");
+      setMapState(index-1);
+      if(index>=data.length-1){
+        setMapState(index);
+        complete.classList.remove("hidden");
       }
-      if(index>0)branches.classList.remove("hidden");
-      if(index>=data.length-1){hub.classList.remove("hidden");conclusion.classList.remove("hidden");}
-      unlock.innerHTML="✨ Mảnh sơ đồ vừa mở: <b>"+esc(value)+"</b>";unlock.classList.remove("hidden");
-      bar.style.width=((index+1)/data.length*100)+"%";
     }
+
     map.querySelector(".hint-btn").onclick=()=>{hint.classList.remove("hidden");wrong.classList.remove("hidden");};
+    map.querySelector(".prev-btn").onclick=()=>{
+      if(index>0){index--;renderStep();}
+    };
     map.querySelector(".confirm-btn").onclick=()=>{
-      reveal(data[index].unlock||"");
-      if(index<data.length-1){index++;setTimeout(renderStep,250);}
-      else{map.querySelector(".confirm-btn").disabled=true;complete.classList.remove("hidden");}
+      if(index<data.length-1){
+        reveal(data[index].unlock||"");
+        index++;
+        setTimeout(renderStep,180);
+      }else{
+        reveal(data[index].unlock||"");
+        setMapState(index);
+        complete.classList.remove("hidden");
+        bar.style.width="100%";
+        map.querySelector(".confirm-btn").textContent="↻ Xem lại từ bước cuối";
+      }
     };
     renderStep();
-  });
-}
+
 
 
 function renderConceptMaps(maps,steps){
