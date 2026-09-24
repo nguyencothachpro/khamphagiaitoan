@@ -3,34 +3,42 @@ title:{type:"string"},summary:{type:"string"},
 student:{type:"object",additionalProperties:false,properties:{grade:{type:"string"},topic:{type:"string"},task:{type:"string"}},required:["grade","topic","task"]},
 teacher:{type:"object",additionalProperties:false,properties:{lesson_goal:{type:"string"},mystery:{type:"string"},clue_strategy:{type:"string"}},required:["lesson_goal","mystery","clue_strategy"]},
 mystery:{type:"object",additionalProperties:false,properties:{title:{type:"string"},context:{type:"string"}},required:["title","context"]},
-clues:{type:"array",items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"},guiding_questions:{type:"array",minItems:2,maxItems:3,items:{type:"string"}}},required:["title","content","guiding_questions"]}},
+evidence:{type:"array",minItems:2,maxItems:6,items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},quote:{type:"string"},why_notice:{type:"string"},question:{type:"string"}},required:["label","quote","why_notice","question"]}},
+clues:{type:"array",minItems:2,maxItems:6,items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},from_evidence:{type:"array",items:{type:"string"}},discovery_goal:{type:"string"},guiding_questions:{type:"array",minItems:2,maxItems:4,items:{type:"string"}},expected_discovery:{type:"string"},hint:{type:"string"}},required:["title","from_evidence","discovery_goal","guiding_questions","expected_discovery","hint"]}},
+discoveries:{type:"array",minItems:2,maxItems:8,items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"},from_clues:{type:"array",items:{type:"string"}},why_it_matters:{type:"string"}},required:["title","content","from_clues","why_it_matters"]}},
+connections:{type:"array",minItems:1,maxItems:6,items:{type:"object",additionalProperties:false,properties:{from:{type:"string"},to:{type:"string"},reason:{type:"string"}},required:["from","to","reason"]}},
+synthesis:{type:"object",additionalProperties:false,properties:{title:{type:"string"},chain:{type:"string"},reveal:{type:"string"}},required:["title","chain","reveal"]},
 standardization:{type:"object",additionalProperties:false,properties:{concept:{type:"string"},knowledge:{type:"string"}},required:["concept","knowledge"]},
 solution:{type:"object",additionalProperties:false,properties:{synthesis:{type:"string"},title:{type:"string"},steps:{type:"array",items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},content:{type:"string"},why:{type:"string"}},required:["label","content","why"]}},final_answer:{type:"string"}},required:["synthesis","title","steps","final_answer"]},
 practice:{type:"array",minItems:5,maxItems:5,items:{type:"object",additionalProperties:false,properties:{level:{type:"string"},problem:{type:"string"},guidance:{type:"string"},solution:{type:"string"},common_error:{type:"string"}},required:["level","problem","guidance","solution","common_error"]}},
 application:{type:"object",additionalProperties:false,properties:{title:{type:"string"},task:{type:"string"}},required:["title","task"]}
-},required:["title","summary","student","teacher","mystery","clues","standardization","solution","practice","application"]};
+},required:["title","summary","student","teacher","mystery","evidence","clues","discoveries","connections","synthesis","standardization","solution","practice","application"]};
 
-const SYSTEM=`Bạn là bộ máy thiết kế HÀNH TRÌNH KHÁM PHÁ TOÁN cho giáo viên Toán THCS Việt Nam.
-Không coi yêu cầu này là một cuộc trò chuyện hỏi-đáp thông thường. Nhiệm vụ là biến bài toán/dữ kiện đầu vào thành một cấu trúc dạy học có thể hiển thị thành hành trình.
+const SYSTEM=`Bạn là bộ máy GIẢI PHẪU VÀ KHÁM PHÁ BÍ ẨN CỦA MỘT BÀI TOÁN THCS Việt Nam.
 
-Nguyên tắc cốt lõi:
-- Bí ẩn chỉ tạo động lực/bối cảnh; không kể chuyện thay cho tư duy toán học.
-- Manh mối phải là dữ kiện, biểu thức, quan hệ hoặc quan sát toán học thật.
-- MỖI MANH MỐI phải có riêng 2–3 câu hỏi dẫn dắt bám sát trực tiếp vào chính nội dung của manh mối đó. Câu hỏi phải đi từ dễ đến khó, giúp học sinh quan sát → trả lời → phát hiện đúng điều mà manh mối muốn học sinh nhận ra. Không gom câu hỏi thành một danh sách chung cho toàn bộ bài. Không hỏi những điều chưa xuất hiện trong manh mối.
-- Khám phá theo mạch: Quan sát → dự đoán → tìm manh mối → thử → phát hiện quan hệ → giải thích → hình thành kiến thức.
-- Vùng khó phải được bẻ thành các câu hỏi nhỏ; không nhảy cóc.
-- Cuối hoạt động phải quay về kiến thức Toán chuẩn: kiến thức chốt, cách trình bày, năng lực/kĩ năng.
-- Sau khi hoàn thành các manh mối, bắt buộc có phần TỔNG HỢP MANH MỐI: nối rõ các phát hiện theo chuỗi logic từ dữ kiện → biểu diễn → quan hệ → phương trình/biểu thức → kết quả. Phần này không phải lời giải mới mà là cầu nối giúp học sinh thấy vì sao các manh mối ghép lại thành lời giải.
-- LỜI GIẢI cuối cùng phải là một bài giải Toán hoàn chỉnh, độc lập với phần hội thoại khám phá, trình bày theo phong cách chuẩn THCS/Kết nối tri thức: xác định ẩn và điều kiện (nếu có), biểu diễn các đại lượng, lập phương trình/biểu thức, giải từng bước, kiểm tra tính phù hợp, kết luận. Mỗi bước phải có nội dung toán học và giải thích ngắn gọn vì sao làm bước đó. Không viết như lời thoại giáo viên.
-- Nội dung lời giải phải đủ chi tiết để học sinh có thể chép lại thành bài làm hoàn chỉnh. Không bỏ qua các phép biến đổi quan trọng.
-- Giao diện sẽ hiển thị lời giải trên nền giấy viết tay; vì vậy hãy dùng văn bản sạch, từng bước rõ ràng, không dùng markdown table hoặc ký hiệu trang trí trong nội dung lời giải.
-- Luyện tập phải gồm đúng 5 bài: củng cố trực tiếp; biến đổi nhẹ; vận dụng; lỗi dễ mắc/kiểm tra khái niệm; tổng hợp.
-- Mỗi bài luyện tập phải có gợi dẫn, lời giải và lỗi thường gặp.
-- Nếu dữ kiện đầu vào không đủ để xác định lớp/chủ đề, ghi rõ chưa xác định thay vì bịa.
-- Nếu ảnh/tệp không đọc rõ, nêu phần chưa đọc được.
-- Không biến kết quả thành lời quảng cáo, không thêm module LMS.
+Mục tiêu không phải chia lời giải thành các thẻ. Mục tiêu là mô phỏng quá trình một học sinh nhìn vào một bài toán, phát hiện dấu vết, lần theo dấu vết để tìm manh mối, khám phá từng manh mối, rồi kết nối các phát hiện để tự nhìn thấy cách giải.
 
-Phong cách: rõ ràng, sư phạm, bắt đầu từ điều nhỏ nhất; luôn trả lời câu hỏi “vì sao làm bước này?”.`;
+BỐN TẦNG BẮT BUỘC:
+1. TÌM DẤU VẾT: evidence là những chi tiết THỰC SỰ CÓ TRONG đề bài. Không được biến chúng thành đáp án. Mỗi dấu vết phải có quote/chi tiết, lý do đáng chú ý và một câu hỏi quan sát.
+2. LẦN THEO DẤU VẾT → MANH MỐI: mỗi clue phải ghi rõ nó xuất phát từ evidence nào. Manh mối là điều học sinh có thể lần ra từ dấu vết, chưa phải lời giải cuối.
+3. KHÁM PHÁ: mỗi clue có mục tiêu phát hiện, 2–4 câu hỏi đi từ quan sát đến suy luận, một đáp án/phát hiện mong đợi và gợi ý khi bí. Câu hỏi phải bám vào clue và KHÔNG nói sẵn expected_discovery.
+4. KẾT NỐI: connections phải chỉ rõ phát hiện nào kết nối với phát hiện nào và vì sao. Cuối cùng synthesis phải làm học sinh thấy cách giải lóe ra từ chính các kết nối.
+
+QUY TẮC SƯ PHẠM:
+- Không đặt x, không lập phương trình, không đưa công thức giải ngay từ đầu nếu học sinh chưa có đủ lý do để đi đến đó.
+- Không nói “manh mối 1 là...” rồi cho luôn kết quả mà câu hỏi đang yêu cầu.
+- Mỗi câu hỏi phải trả lời được: “Câu hỏi này giúp học sinh nhìn thấy điều gì tiếp theo?”
+- Nếu một bước suy luận khó, bẻ thành các câu hỏi nhỏ.
+- Cho phép một dấu vết dẫn tới nhiều manh mối, và nhiều manh mối cùng hội tụ vào một phát hiện.
+- Ưu tiên sơ đồ quan hệ: dữ kiện → dấu vết → manh mối → phát hiện → kết nối.
+- Bí ẩn là câu hỏi lớn bao trùm bài toán; không kể chuyện dài.
+- Sau khi bí ẩn được giải, mới CHUẨN HÓA kiến thức.
+- Lời giải cuối phải độc lập với phần khám phá, trình bày chuẩn THCS/Kết nối tri thức: xác định ẩn/điều kiện, biểu diễn, lập quan hệ, giải, kiểm tra, kết luận. Không viết như lời thoại.
+- Lời giải phải đủ chi tiết để học sinh có thể học cách trình bày.
+- Giao diện hiển thị lời giải trên nền giấy viết tay.
+- Đúng 5 bài luyện tập.
+- Không bịa dữ kiện. Nếu ảnh/tệp không rõ, nói rõ phần không đọc được.
+`;
 
 export default async function handler(req,res){
  if(req.method!=="POST")return res.status(405).json({error:"Method not allowed"});
