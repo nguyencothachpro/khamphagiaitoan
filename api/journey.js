@@ -5,7 +5,7 @@ teacher:{type:"object",additionalProperties:false,properties:{lesson_goal:{type:
 mystery:{type:"object",additionalProperties:false,properties:{title:{type:"string"},context:{type:"string"}},required:["title","context"]},
 clues:{type:"array",items:{type:"object",additionalProperties:false,properties:{title:{type:"string"},content:{type:"string"},guiding_questions:{type:"array",minItems:2,maxItems:3,items:{type:"string"}}},required:["title","content","guiding_questions"]}},
 standardization:{type:"object",additionalProperties:false,properties:{concept:{type:"string"},knowledge:{type:"string"}},required:["concept","knowledge"]},
-solution:{type:"object",additionalProperties:false,properties:{title:{type:"string"},steps:{type:"array",items:{type:"string"}}},required:["title","steps"]},
+solution:{type:"object",additionalProperties:false,properties:{synthesis:{type:"string"},title:{type:"string"},steps:{type:"array",items:{type:"object",additionalProperties:false,properties:{label:{type:"string"},content:{type:"string"},why:{type:"string"}},required:["label","content","why"]}},final_answer:{type:"string"}},required:["synthesis","title","steps","final_answer"]},
 practice:{type:"array",minItems:5,maxItems:5,items:{type:"object",additionalProperties:false,properties:{level:{type:"string"},problem:{type:"string"},guidance:{type:"string"},solution:{type:"string"},common_error:{type:"string"}},required:["level","problem","guidance","solution","common_error"]}},
 application:{type:"object",additionalProperties:false,properties:{title:{type:"string"},task:{type:"string"}},required:["title","task"]}
 },required:["title","summary","student","teacher","mystery","clues","standardization","solution","practice","application"]};
@@ -20,6 +20,10 @@ Nguyên tắc cốt lõi:
 - Khám phá theo mạch: Quan sát → dự đoán → tìm manh mối → thử → phát hiện quan hệ → giải thích → hình thành kiến thức.
 - Vùng khó phải được bẻ thành các câu hỏi nhỏ; không nhảy cóc.
 - Cuối hoạt động phải quay về kiến thức Toán chuẩn: kiến thức chốt, cách trình bày, năng lực/kĩ năng.
+- Sau khi hoàn thành các manh mối, bắt buộc có phần TỔNG HỢP MANH MỐI: nối rõ các phát hiện theo chuỗi logic từ dữ kiện → biểu diễn → quan hệ → phương trình/biểu thức → kết quả. Phần này không phải lời giải mới mà là cầu nối giúp học sinh thấy vì sao các manh mối ghép lại thành lời giải.
+- LỜI GIẢI cuối cùng phải là một bài giải Toán hoàn chỉnh, độc lập với phần hội thoại khám phá, trình bày theo phong cách chuẩn THCS/Kết nối tri thức: xác định ẩn và điều kiện (nếu có), biểu diễn các đại lượng, lập phương trình/biểu thức, giải từng bước, kiểm tra tính phù hợp, kết luận. Mỗi bước phải có nội dung toán học và giải thích ngắn gọn vì sao làm bước đó. Không viết như lời thoại giáo viên.
+- Nội dung lời giải phải đủ chi tiết để học sinh có thể chép lại thành bài làm hoàn chỉnh. Không bỏ qua các phép biến đổi quan trọng.
+- Giao diện sẽ hiển thị lời giải trên nền giấy viết tay; vì vậy hãy dùng văn bản sạch, từng bước rõ ràng, không dùng markdown table hoặc ký hiệu trang trí trong nội dung lời giải.
 - Luyện tập phải gồm đúng 5 bài: củng cố trực tiếp; biến đổi nhẹ; vận dụng; lỗi dễ mắc/kiểm tra khái niệm; tổng hợp.
 - Mỗi bài luyện tập phải có gợi dẫn, lời giải và lỗi thường gặp.
 - Nếu dữ kiện đầu vào không đủ để xác định lớp/chủ đề, ghi rõ chưa xác định thay vì bịa.
