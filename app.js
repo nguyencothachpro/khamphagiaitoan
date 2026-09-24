@@ -26,13 +26,91 @@ function openKeyDialog(){
 async function run(){const text=promptEl.value.trim();if(!text&&!files.length)return;lastInput=text;status.textContent="Đang xây hành trình…";send.disabled=true;intro.classList.add("hidden");journey.className="journey";journey.innerHTML='<div class="loading">Đang đọc đề và dựng Hành Trình Khám Phá…</div>';try{const payload={provider:provider.value,prompt:text,files:await encodeFiles(files),apiKey:getApiKey()};const r=await fetch("/api/journey",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||"Không tạo được hành trình");renderJourney(data.journey);addHistory(data.journey?.title||text||"Bài toán mới");status.textContent="Đã tạo hành trình"}catch(e){journey.innerHTML='<div class="error"><b>Không tạo được hành trình.</b><br>'+esc(e.message)+'</div>';status.textContent="Có lỗi"}finally{send.disabled=false}}
 async function encodeFiles(a){return Promise.all(a.map(f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({name:f.name,type:f.type||"application/octet-stream",data:r.result});r.onerror=rej;r.readAsDataURL(f)})))}
 function renderJourney(j){
- const evidence=(j.evidence||[]).map((e,i)=>'<div class="evidence-item"><span class="node">D'+(i+1)+'</span><div><b>'+esc(e.label||'Dấu vết '+(i+1))+'</b><div class="quote">“'+esc(e.quote||'')+'”</div><p>'+esc(e.why_notice||'')+'</p><div class="question">🔎 '+esc(e.question||'')+'</div></div></div>').join('');
- const clues=(j.clues||[]).map((c,i)=>{const q=(c.guiding_questions||[]).map(x=>'<div class="question">❓ '+esc(x)+'</div>').join('');return '<div class="clue"><div class="clue-head"><span class="node">M'+(i+1)+'</span><b>'+esc(c.title||'Manh mối')+'</b></div><div class="from">Lần theo: '+esc((c.from_evidence||[]).join(', '))+'</div><p><b>Mục tiêu khám phá:</b> '+esc(c.discovery_goal||'')+'</p>'+q+'<div class="hint">💡 Gợi ý khi bí: '+esc(c.hint||'')+'</div><div class="expected">✨ Phát hiện mong đợi: '+esc(c.expected_discovery||'')+'</div></div>'}).join('');
- const discoveries=(j.discoveries||[]).map((d,i)=>'<div class="discovery"><span class="node">P'+(i+1)+'</span><div><b>'+esc(d.title||'Phát hiện')+'</b><p>'+esc(d.content||'')+'</p><small>Từ: '+esc((d.from_clues||[]).join(', '))+'</small><div class="why">Vì sao quan trọng: '+esc(d.why_it_matters||'')+'</div></div></div>').join('');
- const connections=(j.connections||[]).map(x=>'<div class="connection"><b>'+esc(x.from)+' → '+esc(x.to)+'</b><p>'+esc(x.reason)+'</p></div>').join('');
- const solutionSteps=(j.solution?.steps||[]).map((s,i)=>'<div class="hand-step"><div class="hand-label">'+esc(s.label||('Bước '+(i+1)))+'</div><div class="hand-content">'+esc(s.content||'')+'</div>'+(s.why?'<div class="hand-why">Vì: '+esc(s.why)+'</div>':'')+'</div>').join('');
- const practices=(j.practice||[]).map((p,i)=>'<div class="practice-item"><b>Bài '+(i+1)+' — '+esc(p.level||'')+'</b><p>'+esc(p.problem||'')+'</p></div>').join('');
- journey.innerHTML='<div class="journey-head"><div><h2>'+esc(j.title||'Hành Trình Khám Phá Toán')+'</h2><p>'+esc(j.summary||'')+'</p></div></div><div class="tree"><div class="branch"><h3>👨‍🎓 HỌC SINH</h3><ul><li>'+esc(j.student?.grade||'Chọn lớp 6–9')+'</li><li>'+esc(j.student?.topic||'Chọn chủ đề')+'</li><li>'+esc(j.student?.task||'Chọn bài toán')+'</li></ul></div><div class="branch"><h3>👨‍🏫 GIÁO VIÊN</h3><ul><li>'+esc(j.teacher?.lesson_goal||'Mục tiêu bài học')+'</li><li>'+esc(j.teacher?.mystery||'Bí ẩn')+'</li><li>'+esc(j.teacher?.clue_strategy||'Chiến lược khám phá')+'</li></ul></div></div><div class="flow"><div class="step"><div class="card mystery"><div class="eyebrow">🧩 BÍ ẨN</div><h3>❓ '+esc(j.mystery?.title||'')+'</h3><p>'+esc(j.mystery?.context||'')+'</p></div></div><div class="step"><div class="card autopsy"><div class="eyebrow">👁️ GIẢI PHẪU BÀI TOÁN</div><h3>1. TÌM DẤU VẾT</h3><div class="evidence-list">'+evidence+'</div></div></div><div class="step"><div class="card clue-stage"><div class="eyebrow">🕵️ LẦN THEO DẤU VẾT</div><h3>2. CÁC MANH MỐI</h3><div class="clues">'+clues+'</div></div></div><div class="step"><div class="card discovery-stage"><div class="eyebrow">🧠 KHÁM PHÁ</div><h3>3. PHÁT HIỆN ĐIỀU ẨN SAU MANH MỐI</h3><div class="discoveries">'+discoveries+'</div></div></div><div class="step"><div class="card connection-stage"><div class="eyebrow">🔗 KẾT NỐI</div><h3>4. NỐI CÁC PHÁT HIỆN</h3><div class="connections">'+connections+'</div><div class="reveal"><b>✨ '+esc(j.synthesis?.title||'Cách giải lóe ra')+'</b><p>'+esc(j.synthesis?.chain||'')+'</p><strong>'+esc(j.synthesis?.reveal||'')+'</strong></div></div></div><div class="step"><div class="card standard"><div class="eyebrow">📖 CHUẨN HÓA</div><h3>'+esc(j.standardization?.concept||'Kiến thức cần hình thành')+'</h3><p>'+esc(j.standardization?.knowledge||'')+'</p></div></div><div class="step"><div class="card solution-paper"><div class="eyebrow">✍️ LỜI GIẢI CHUẨN</div><h3>'+esc(j.solution?.title||'Bài giải')+'</h3><div class="hand-paper"><div class="hand-title">Bài giải</div>'+solutionSteps+'<div class="hand-final">'+esc(j.solution?.final_answer||'')+'</div></div></div></div><div class="step"><div class="card practice"><div class="eyebrow">📝 LUYỆN TẬP</div><h3>5 bài theo hành trình</h3><div class="practice-list">'+practices+'</div></div></div><div class="step"><div class="card application"><div class="eyebrow">🎯 VẬN DỤNG</div><h3>'+esc(j.application?.title||'Chuyển giao kiến thức')+'</h3><p>'+esc(j.application?.task||'')+'</p></div></div></div>';
+  const evidence=(j.evidence||[]).map((e,i)=>
+    '<div class="an-node evidence-node" data-id="D'+(i+1)+'">'+
+      '<div class="an-node-top"><span class="node">D'+(i+1)+'</span><span class="an-type">DẤU VẾT</span></div>'+
+      '<b>'+esc(e.label||'Dấu vết '+(i+1))+'</b>'+
+      '<div class="quote">“'+esc(e.quote||'')+'”</div>'+
+      '<p>'+esc(e.why_notice||'')+'</p>'+
+      '<div class="question">🔎 '+esc(e.question||'')+'</div>'+
+    '</div>'
+  ).join('');
+
+  const clues=(j.clues||[]).map((c,i)=>{
+    const q=(c.guiding_questions||[]).map(x=>'<div class="question">❓ '+esc(x)+'</div>').join('');
+    return '<div class="an-node clue-node" data-id="M'+(i+1)+'">'+
+      '<div class="an-node-top"><span class="node">M'+(i+1)+'</span><span class="an-type">MANH MỐI</span></div>'+
+      '<b>'+esc(c.title||'Manh mối')+'</b>'+
+      '<div class="from">← Từ: '+esc((c.from_evidence||[]).join(', '))+'</div>'+
+      '<p><b>Đang truy tìm:</b> '+esc(c.discovery_goal||'')+'</p>'+
+      '<details class="clue-detail"><summary>🔎 Lần theo manh mối</summary>'+q+
+        '<div class="hint">💡 Gợi ý khi bí: '+esc(c.hint||'')+'</div>'+
+      '</details>'+
+    '</div>';
+  }).join('');
+
+  const discoveries=(j.discoveries||[]).map((d,i)=>
+    '<div class="an-node discovery-node" data-id="P'+(i+1)+'">'+
+      '<div class="an-node-top"><span class="node">P'+(i+1)+'</span><span class="an-type">PHÁT HIỆN</span></div>'+
+      '<b>'+esc(d.title||'Phát hiện')+'</b>'+
+      '<p>'+esc(d.content||'')+'</p>'+
+      '<small>← Từ manh mối: '+esc((d.from_clues||[]).join(', '))+'</small>'+
+      '<div class="why">Vì sao quan trọng: '+esc(d.why_it_matters||'')+'</div>'+
+    '</div>'
+  ).join('');
+
+  const connections=(j.connections||[]).map((x,i)=>
+    '<div class="connection-line">'+
+      '<span class="conn-dot">'+(i+1)+'</span>'+
+      '<b>'+esc(x.from||'')+'</b><span class="conn-arrow">→</span><b>'+esc(x.to||'')+'</b>'+
+      '<span class="conn-reason">'+esc(x.reason||'')+'</span>'+
+    '</div>'
+  ).join('');
+
+  const solutionSteps=(j.solution?.steps||[]).map((s,i)=>
+    '<div class="hand-step"><div class="hand-label">'+esc(s.label||('Bước '+(i+1)))+'</div>'+
+    '<div class="hand-content">'+esc(s.content||'')+'</div>'+
+    (s.why?'<div class="hand-why">Vì: '+esc(s.why)+'</div>':'')+
+    '</div>'
+  ).join('');
+
+  const practices=(j.practice||[]).map((p,i)=>
+    '<div class="practice-item"><b>Bài '+(i+1)+' — '+esc(p.level||'')+'</b><p>'+esc(p.problem||'')+'</p></div>'
+  ).join('');
+
+  const problemText=j.problem?.text||j.task||j.summary||'Bài toán cần khám phá';
+  const evidenceLegend=(j.evidence||[]).map((e,i)=>
+    '<span class="legend-item"><i>D'+(i+1)+'</i>'+esc(e.label||'Dấu vết '+(i+1))+'</span>'
+  ).join('');
+
+  journey.innerHTML=
+    '<div class="journey-head"><div><h2>'+esc(j.title||'Hành Trình Khám Phá Toán')+'</h2><p>'+esc(j.summary||'')+'</p></div></div>'+
+    '<div class="tree"><div class="branch"><h3>👨‍🎓 HỌC SINH</h3><ul><li>'+esc(j.student?.grade||'Chọn lớp 6–9')+'</li><li>'+esc(j.student?.topic||'Chọn chủ đề')+'</li><li>'+esc(j.student?.task||'Chọn bài toán')+'</li></ul></div>'+
+    '<div class="branch"><h3>👨‍🏫 GIÁO VIÊN</h3><ul><li>'+esc(j.teacher?.lesson_goal||'Mục tiêu bài học')+'</li><li>'+esc(j.teacher?.mystery||'Bí ẩn')+'</li><li>'+esc(j.teacher?.clue_strategy||'Chiến lược khám phá')+'</li></ul></div></div>'+
+    '<div class="anatomy">'+
+      '<div class="anatomy-title"><span class="eyebrow">🧬 GIẢI PHẪU BÀI TOÁN</span><h3>Không đọc bài toán như một khối chữ — tách nó thành các dấu vết và lần theo chúng</h3></div>'+
+      '<div class="anatomy-legend">'+evidenceLegend+'</div>'+
+      '<div class="an-stage problem-stage">'+
+        '<div class="an-core"><div class="core-kicker">🧩 BÀI TOÁN</div><div class="core-text">'+esc(problemText)+'</div><div class="core-mystery">❓ '+esc(j.mystery?.title||'Bí ẩn cần giải')+'</div></div>'+
+        '<div class="an-arrow">↓</div><div class="stage-label">1 · TÌM DẤU VẾT</div>'+
+        '<div class="an-grid evidence-grid">'+evidence+'</div>'+
+      '</div>'+
+      '<div class="an-connector">↓ <span>mỗi dấu vết mở ra một hướng điều tra</span> ↓</div>'+
+      '<div class="an-stage clue-stage-map"><div class="stage-label">2 · LẦN THEO DẤU VẾT → MANH MỐI</div><div class="an-grid clue-grid">'+clues+'</div></div>'+
+      '<div class="an-connector split">↙ <span>khám phá</span> ↘</div>'+
+      '<div class="an-stage discovery-stage-map"><div class="stage-label">3 · KHÁM PHÁ → PHÁT HIỆN</div><div class="an-grid discovery-grid">'+discoveries+'</div></div>'+
+      '<div class="an-connector">↓ <span>nối những gì đã phát hiện</span> ↓</div>'+
+      '<div class="an-stage connection-stage-map"><div class="stage-label">4 · KẾT NỐI CÁC PHÁT HIỆN</div><div class="connection-map">'+connections+'</div>'+
+        '<div class="reveal"><b>✨ '+esc(j.synthesis?.title||'Cách giải lóe ra')+'</b><p>'+esc(j.synthesis?.chain||'')+'</p><strong>'+esc(j.synthesis?.reveal||'')+'</strong></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="flow">'+
+      '<div class="step"><div class="card mystery"><div class="eyebrow">🧩 BÍ ẨN</div><h3>❓ '+esc(j.mystery?.title||'')+'</h3><p>'+esc(j.mystery?.context||'')+'</p></div></div>'+
+      '<div class="step"><div class="card standard"><div class="eyebrow">📖 CHUẨN HÓA</div><h3>'+esc(j.standardization?.concept||'Kiến thức cần hình thành')+'</h3><p>'+esc(j.standardization?.knowledge||'')+'</p></div></div>'+
+      '<div class="step"><div class="card solution-paper"><div class="eyebrow">✍️ LỜI GIẢI CHUẨN</div><h3>'+esc(j.solution?.title||'Bài giải')+'</h3><div class="hand-paper"><div class="hand-title">Bài giải</div>'+solutionSteps+'<div class="hand-final">'+esc(j.solution?.final_answer||'')+'</div></div></div></div>'+
+      '<div class="step"><div class="card practice"><div class="eyebrow">📝 LUYỆN TẬP</div><h3>5 bài theo hành trình</h3><div class="practice-list">'+practices+'</div></div></div>'+
+      '<div class="step"><div class="card application"><div class="eyebrow">🎯 VẬN DỤNG</div><h3>'+esc(j.application?.title||'Chuyển giao kiến thức')+'</h3><p>'+esc(j.application?.task||'')+'</p></div></div>'+
+    '</div>';
 }
 function addHistory(t){const d=document.createElement("div");d.className="history-item";d.textContent=t.slice(0,38);historyEl.prepend(d)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
