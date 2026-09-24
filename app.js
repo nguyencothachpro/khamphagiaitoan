@@ -87,7 +87,7 @@ function renderJourney(j){
     const branches=(problemMap.branches||[]).map((b,i)=>
       '<div class="pm-live-branch">'+
         '<div class="pm-live-label" data-piece="'+esc(b.label||('Phần '+(i+1)))">'+esc(b.label||('Phần '+(i+1)))+'</div>'+
-        '<div class="pm-live-expression" data-piece="'+esc(b.expression||'')+'">'+esc(b.expression||'')+'</div>'+
+        '<div class="pm-live-expression hidden" data-piece="'+esc(b.expression||'')+'">'+esc(b.expression||'')+'</div>'+
       '</div>'
     ).join('');
     const unlocks=steps.map(s=>esc(s.unlock||'')).join('|');
