@@ -110,3 +110,38 @@
 .problem-map-card .pm-diagram{margin-top:7px}
 .problem-map-card .pm-explanation{margin-bottom:0}
 @media(max-width:600px){.problem-maps{padding:14px 9px}.problem-map-card{padding:12px 7px}}
+
+/* ===== HỌC SINH TỰ DỰNG SƠ ĐỒ ===== */
+.guided-discovery{margin:0 0 22px;padding:20px;border:2px solid #e4e0f4;border-radius:20px;background:linear-gradient(180deg,#fbfaff,#fff);box-shadow:0 9px 28px rgba(75,65,130,.06)}
+.guided-title{text-align:center;margin-bottom:15px}
+.guided-title .eyebrow{color:#5d55c9}
+.guided-title h3{margin:7px auto 0;max-width:720px;font-size:17px;line-height:1.45}
+.guided-map{margin-top:14px;border:1px solid #e2e0ea;border-radius:15px;background:#fff;overflow:hidden}
+.guided-map-head{display:flex;align-items:center;gap:10px;padding:13px 15px;background:#f6f4ff;border-bottom:1px solid #e7e4f0}
+.guided-map-head>span{font-size:20px}.guided-map-head b{display:block;font-size:12px}.guided-map-head small{display:block;margin-top:2px;color:#77757f;font-size:10px}
+.guided-steps{padding:13px 15px}
+.guided-step{display:grid;grid-template-columns:30px 1fr;gap:10px;position:relative;padding:0 0 15px}
+.guided-step:not(:last-child):before{content:"";position:absolute;left:14px;top:31px;bottom:0;width:1px;background:#d8d4e5}
+.guided-step-no{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#eeeafb;color:#6559b1;font-size:10px;font-weight:850;z-index:1}
+.guided-step-body{padding:11px 12px;border:1px solid #e3e1eb;border-radius:12px;background:#fcfcfe}
+.guided-step.locked{opacity:.45}.guided-step.locked .guided-step-body{filter:grayscale(.4)}
+.guided-step.completed .guided-step-no{background:#e6f7ef;color:#2f8b67}
+.guided-step.completed .guided-step-body{border-color:#cfe9dc}
+.guided-kicker{font-size:8px;font-weight:850;letter-spacing:.12em;color:#7a72b9}
+.guided-step h4{margin:4px 0 7px;font-size:13px}
+.guided-question{padding:10px 11px;border-radius:9px;background:#f5f4fb;color:#3e3b4e;font-size:12px;line-height:1.55;font-weight:650}
+.student-goal{margin-top:7px;font-size:10px;color:#77747e;line-height:1.5}
+.guided-answer{width:100%;box-sizing:border-box;margin-top:9px;resize:vertical;border:1px solid #dddbe6;border-radius:9px;padding:9px;font-family:inherit;font-size:11px;outline:none;background:#fff}
+.guided-answer:focus{border-color:#7168d7;box-shadow:0 0 0 3px rgba(113,104,215,.08)}
+.guided-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.guided-actions button{border:1px solid #dedce7;border-radius:8px;padding:7px 10px;background:#fff;cursor:pointer;font-size:10px;font-weight:700}
+.guided-actions .unlock-btn{border-color:#6559c4;background:#6559c4;color:#fff}
+.guided-hint,.guided-wrong{margin-top:7px;padding:8px 10px;border-radius:8px;font-size:10px;line-height:1.5}
+.guided-hint{background:#fff8e9;color:#89672e}.guided-wrong{background:#f7f5fc;color:#666174}
+.teacher-answer{margin-top:8px;font-size:10px;color:#777}
+.teacher-answer summary{cursor:pointer;color:#6559b1;font-weight:700}
+.teacher-answer div{margin-top:5px;padding:7px 9px;background:#f4fbf7;border-radius:7px;color:#39745b;line-height:1.5}
+.unlocked-piece{margin-top:9px;padding:9px 11px;border-radius:9px;background:#eaf8f1;border:1px solid #cfe9dc;color:#2e795c;font-size:11px}
+.guided-complete{margin:0 15px 15px;padding:11px 13px;border-radius:10px;background:#f3f0ff;color:#564da0;font-size:11px;line-height:1.55}
+.hidden{display:none!important}
+@media(max-width:600px){.guided-discovery{padding:14px 9px}.guided-steps{padding:11px 9px}.guided-step{grid-template-columns:26px 1fr}.guided-step-no{width:25px;height:25px}.guided-step:not(:last-child):before{left:12px}}
