@@ -452,3 +452,52 @@
   margin-top:8px;
   font-size:21px;
 }
+
+/* ===== SỬA SƠ ĐỒ TƯ DUY TRÊN BẢNG: chỉ giữ mối quan hệ toán học ===== */
+.teacher-board .board-right .pm-live-reason{display:none!important}
+.teacher-board .board-right .pm-live-branches{gap:42px;padding-top:34px}
+.teacher-board .board-right .pm-live-branch{padding-top:0}
+.teacher-board .board-right .pm-live-branch:before{
+  content:"";
+  display:block;
+  position:relative;
+  width:2px;
+  height:24px;
+  margin:-34px auto 5px;
+  background:#fff;
+  border:0;
+}
+.teacher-board .board-right .pm-live-branch:after{
+  content:"";
+  display:block;
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  font-size:17px;
+  line-height:17px;
+}
+.teacher-board .board-right .pm-live-label{
+  margin:6px auto 10px;
+  min-height:0;
+}
+.teacher-board .board-right .pm-live-expression{
+  margin:0 auto;
+}
+.teacher-board .board-right .pm-live-hub{
+  height:26px;
+}
+.teacher-board .board-right .pm-live-hub:after{
+  width:210px;
+  transform:translateX(-105px);
+}
+.teacher-board .board-right .pm-live-conclusion{
+  margin-top:18px;
+  border:0;
+  background:transparent;
+  font-size:18px;
+}
+.teacher-board .board-right .pm-live-conclusion strong{
+  font-size:23px;
+}
