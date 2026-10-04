@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="675" height="435" viewBox="0 0 675 435">
+<rect width="675" height="435" fill="#f4f4f4"/>
+<g fill="#111" font-family="monospace" font-size="16" text-anchor="middle">
+<text x="194" y="38">10 NGÀY</text>
+<path d="M194 52 V91 M114 91 H273 M114 91 V104 M273 91 V104" fill="none" stroke="#111" stroke-width="1"/>
+<text x="114" y="128">↓</text>
+<text x="273" y="128">↓</text>
+<text x="114" y="158">3 ngày đầu</text>
+<text x="273" y="158">7 ngày tiếp theo</text>
+<text x="114" y="191">↓</text>
+<text x="273" y="191">↓</text>
+<text x="114" y="221">3x</text>
+<text x="273" y="221">7(x+5)</text>
+<path d="M114 235 V263 M273 235 V263 M114 263 H273 M194 263 V278" fill="none" stroke="#111" stroke-width="1"/>
+<text x="194" y="304">↓</text>
+<text x="194" y="337">TỔNG SẢN LƯỢNG</text>
+<text x="194" y="370">335</text>
+</g>
+</svg>
