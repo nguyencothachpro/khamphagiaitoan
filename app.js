@@ -179,7 +179,7 @@ function initGuidedMaps(){
     const data=(window.__KHAM_PHA_GUIDED||{})[Number(map.dataset.map)]||[];
     let index=0;
     if(!data.length){map.querySelector(".guided-current").innerHTML='<div class="guided-empty">Chưa có đủ bước khám phá cho sơ đồ này.</div>';return;}
-    const root=map.querySelector(".pm-live-root"),branches=map.querySelector(".pm-live-branches"),vline=map.querySelector(".pm-live-vline"),hub=map.querySelector(".pm-live-hub"),conclusion=map.querySelector(".pm-live-conclusion");
+    const root=map.querySelector(".pm-web-root"),branches=map.querySelector(".pm-web-branches"),vline=map.querySelector(".pm-web-vline"),hub=map.querySelector(".pm-web-hub"),conclusion=map.querySelector(".pm-web-conclusion");
     const no=map.querySelector(".current-no"),title=map.querySelector(".current-title"),question=map.querySelector(".current-question"),goal=map.querySelector(".current-goal"),hint=map.querySelector(".current-hint"),wrong=map.querySelector(".current-wrong"),expected=map.querySelector(".current-expected"),design=map.querySelector(".current-design"),unlock=map.querySelector(".current-unlock"),count=map.querySelector(".progress-count"),bar=map.querySelector(".progress-track i"),complete=map.querySelector(".guided-complete");
 
     function setMapState(targetIndex){
@@ -190,14 +190,14 @@ function initGuidedMaps(){
       branches.classList.remove("hidden");
       hub.classList.remove("hidden");
       conclusion.classList.remove("hidden");
-      map.querySelectorAll(".pm-live-label,.pm-live-expression,.pm-live-reason").forEach(el=>{
+      map.querySelectorAll(".pm-web-label,.pm-web-expression,.pm-web-reason").forEach(el=>{
         el.classList.remove("hidden");
         el.classList.remove("is-current");
       });
 
       if(targetIndex<0)return;
 
-      const pieces=[...map.querySelectorAll(".pm-live-label,.pm-live-expression")];
+      const pieces=[...map.querySelectorAll(".pm-web-label,.pm-web-expression")];
       const currentUnlock=String(data[targetIndex]?.unlock||"").trim().toLowerCase();
       let current=null;
 
