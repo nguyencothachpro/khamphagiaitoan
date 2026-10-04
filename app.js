@@ -183,28 +183,49 @@ function initGuidedMaps(){
     const no=map.querySelector(".current-no"),title=map.querySelector(".current-title"),question=map.querySelector(".current-question"),goal=map.querySelector(".current-goal"),hint=map.querySelector(".current-hint"),wrong=map.querySelector(".current-wrong"),expected=map.querySelector(".current-expected"),design=map.querySelector(".current-design"),unlock=map.querySelector(".current-unlock"),count=map.querySelector(".progress-count"),bar=map.querySelector(".progress-track i"),complete=map.querySelector(".guided-complete");
 
     function setMapState(targetIndex){
-      // Bên phải luôn giữ nút gốc của sơ đồ; các nhánh mới mở dần theo từng bước.
-      root.classList.remove("hidden");vline.classList.add("hidden");branches.classList.add("hidden");hub.classList.add("hidden");conclusion.classList.add("hidden");
+      root.classList.remove("hidden");
+      vline.classList.add("hidden");
+      branches.classList.add("hidden");
+      hub.classList.add("hidden");
+      conclusion.classList.add("hidden");
       map.querySelectorAll(".pm-live-label,.pm-live-expression,.pm-live-reason").forEach(el=>el.classList.add("hidden"));
       if(targetIndex<0)return;
-      for(let s=0;s<=targetIndex;s++){
-        const value=String(data[s]?.unlock||"").trim().toLowerCase();
-        if(s===0){root.classList.remove("hidden");vline.classList.remove("hidden");}
-        let matched=false;
-        map.querySelectorAll("[data-piece]").forEach(el=>{
-          const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
-          if(p && value && (p===value||p.includes(value)||value.includes(p))){el.classList.remove("hidden");const branch=el.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");matched=true;}
-        });
-        if(s>0)branches.classList.remove("hidden");
-        if(!matched && s>0){
-          const fallback=[...map.querySelectorAll(".pm-live-label.hidden,.pm-live-expression.hidden")];
-          const piece=fallback[Math.min(s-1,fallback.length-1)];
-          if(piece){piece.classList.remove("hidden");const branch=piece.closest(".pm-live-branch");if(branch)branch.querySelector(".pm-live-reason")?.classList.remove("hidden");}
+
+      const branchEls=[...map.querySelectorAll(".pm-live-branch")];
+      const labels=branchEls.map(b=>b.querySelector(".pm-live-label")).filter(Boolean);
+      const expressions=branchEls.map(b=>b.querySelector(".pm-live-expression")).filter(Boolean);
+
+      // Bước 0: chỉ có nút gốc. Sau đó lần lượt mở:
+      // nhánh 1 → biểu thức 1 → nhánh 2 → biểu thức 2 → ...
+      if(targetIndex>=1 && labels[0]){
+        branches.classList.remove("hidden");
+        labels[0].classList.remove("hidden");
+      }
+      if(targetIndex>=2 && expressions[0]) expressions[0].classList.remove("hidden");
+
+      for(let i=1;i<branchEls.length;i++){
+        if(targetIndex>=3+(i-1)*2){
+          branches.classList.remove("hidden");
+          labels[i]?.classList.remove("hidden");
+        }
+        if(targetIndex>=4+(i-1)*2){
+          expressions[i]?.classList.remove("hidden");
         }
       }
-      if(targetIndex>=data.length-1){hub.classList.remove("hidden");conclusion.classList.remove("hidden");}
-    }
 
+      map.querySelectorAll(".pm-live-branch").forEach(branch=>{
+        const label=branch.querySelector(".pm-live-label");
+        const expression=branch.querySelector(".pm-live-expression");
+        const reason=branch.querySelector(".pm-live-reason");
+        if(label && !label.classList.contains("hidden")) reason?.classList.remove("hidden");
+        if(expression && !expression.classList.contains("hidden")) reason?.classList.remove("hidden");
+      });
+
+      if(targetIndex>=data.length-1){
+        hub.classList.remove("hidden");
+        conclusion.classList.remove("hidden");
+      }
+    }
     function renderStep(){
       const d=data[index];if(!d)return;
       no.textContent=index+1;count.textContent="Bước "+(index+1)+"/"+data.length;bar.style.width=(index/data.length*100)+"%";
@@ -220,7 +241,7 @@ function initGuidedMaps(){
       next.disabled=false;
       next.textContent=index>=data.length-1?"↻ Hoàn thành lại bước này":"▶ Xem bước tiếp theo → mở mảnh sơ đồ";
       complete.classList.add("hidden");
-      setMapState(index-1);
+      setMapState(index);
       if(index>=data.length-1){
         setMapState(index);
         complete.classList.remove("hidden");
