@@ -183,48 +183,36 @@ function initGuidedMaps(){
     const no=map.querySelector(".current-no"),title=map.querySelector(".current-title"),question=map.querySelector(".current-question"),goal=map.querySelector(".current-goal"),hint=map.querySelector(".current-hint"),wrong=map.querySelector(".current-wrong"),expected=map.querySelector(".current-expected"),design=map.querySelector(".current-design"),unlock=map.querySelector(".current-unlock"),count=map.querySelector(".progress-count"),bar=map.querySelector(".progress-track i"),complete=map.querySelector(".guided-complete");
 
     function setMapState(targetIndex){
+      // Cột Tư duy luôn trình bày TRỌN VẸN bộ khung của bài toán.
+      // Bước hiện tại chỉ dùng để đánh dấu mảnh đang được khám phá.
       root.classList.remove("hidden");
-      vline.classList.add("hidden");
-      branches.classList.add("hidden");
-      hub.classList.add("hidden");
-      conclusion.classList.add("hidden");
-      map.querySelectorAll(".pm-live-label,.pm-live-expression,.pm-live-reason").forEach(el=>el.classList.add("hidden"));
-      if(targetIndex<0)return;
-
-      const branchEls=[...map.querySelectorAll(".pm-live-branch")];
-      const labels=branchEls.map(b=>b.querySelector(".pm-live-label")).filter(Boolean);
-      const expressions=branchEls.map(b=>b.querySelector(".pm-live-expression")).filter(Boolean);
-
-      // Bước 0: chỉ có nút gốc. Sau đó lần lượt mở:
-      // nhánh 1 → biểu thức 1 → nhánh 2 → biểu thức 2 → ...
-      if(targetIndex>=1 && labels[0]){
-        branches.classList.remove("hidden");
-        labels[0].classList.remove("hidden");
-      }
-      if(targetIndex>=2 && expressions[0]) expressions[0].classList.remove("hidden");
-
-      for(let i=1;i<branchEls.length;i++){
-        if(targetIndex>=3+(i-1)*2){
-          branches.classList.remove("hidden");
-          labels[i]?.classList.remove("hidden");
-        }
-        if(targetIndex>=4+(i-1)*2){
-          expressions[i]?.classList.remove("hidden");
-        }
-      }
-
-      map.querySelectorAll(".pm-live-branch").forEach(branch=>{
-        const label=branch.querySelector(".pm-live-label");
-        const expression=branch.querySelector(".pm-live-expression");
-        const reason=branch.querySelector(".pm-live-reason");
-        if(label && !label.classList.contains("hidden")) reason?.classList.remove("hidden");
-        if(expression && !expression.classList.contains("hidden")) reason?.classList.remove("hidden");
+      vline.classList.remove("hidden");
+      branches.classList.remove("hidden");
+      hub.classList.remove("hidden");
+      conclusion.classList.remove("hidden");
+      map.querySelectorAll(".pm-live-label,.pm-live-expression,.pm-live-reason").forEach(el=>{
+        el.classList.remove("hidden");
+        el.classList.remove("is-current");
       });
 
-      if(targetIndex>=data.length-1){
-        hub.classList.remove("hidden");
-        conclusion.classList.remove("hidden");
+      if(targetIndex<0)return;
+
+      const pieces=[...map.querySelectorAll(".pm-live-label,.pm-live-expression")];
+      const currentUnlock=String(data[targetIndex]?.unlock||"").trim().toLowerCase();
+      let current=null;
+
+      if(currentUnlock){
+        current=pieces.find(el=>{
+          const p=String(el.getAttribute("data-piece")||"").trim().toLowerCase();
+          return p && (p===currentUnlock || p.includes(currentUnlock) || currentUnlock.includes(p));
+        });
       }
+
+      // Nếu AI không dùng đúng chữ unlock, vẫn đánh dấu theo thứ tự.
+      if(!current && pieces.length){
+        current=pieces[Math.min(Math.max(targetIndex-1,0),pieces.length-1)];
+      }
+      current?.classList.add("is-current");
     }
     function renderStep(){
       const d=data[index];if(!d)return;
