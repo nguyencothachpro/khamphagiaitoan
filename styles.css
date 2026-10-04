@@ -307,3 +307,25 @@
   .thinking-map,.thinking-map .pm-live-map-inner{min-height:260px}
   .thinking-map .pm-live-map-inner{padding:24px 8px 30px}
 }
+
+/* BẢNG CỦA THẦY: trái là lời giải trọn vẹn, phải là sơ đồ tư duy */
+.teacher-board{width:min(100%,1200px);margin:14px auto 0;background:#075f4c;border:2px solid #064f40;border-radius:2px;overflow:hidden;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.teacher-board-label{padding:8px 16px;background:#075b4a;border-bottom:1px solid rgba(255,255,255,.18);font-size:11px;font-weight:800;letter-spacing:.08em}
+.teacher-board-split{display:grid;grid-template-columns:1fr 2px 1fr;min-height:570px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.075) 0,rgba(255,255,255,.075) 1px,transparent 1px,transparent 42px)}
+.board-left,.board-right{padding:28px 38px}
+.board-divider{background:rgba(255,255,255,.9);margin:18px 0}
+.board-heading{font-family:"Segoe Print","Comic Sans MS",cursive;font-size:28px;text-align:center;text-decoration:underline;text-underline-offset:9px;margin:0 0 25px}
+.board-solution{font-family:"Segoe Print","Comic Sans MS",cursive;font-size:15px;line-height:1.8}
+.board-solution-step{margin-bottom:18px}
+.board-solution-step b{display:block;font-size:17px;margin-bottom:4px}
+.board-solution-step small{display:block;font-size:12px;opacity:.8}
+.board-final{margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,.45);font-weight:700}
+.board-right .pm-live-map{min-height:480px;border:0;background:transparent;box-shadow:none;padding:12px 0 30px}
+.board-right .pm-live-root,.board-right .pm-live-label,.board-right .pm-live-expression,.board-right .pm-live-conclusion{font-family:"Segoe Print","Comic Sans MS",cursive;color:#fff;background:transparent;border-color:#fff}
+.board-right .pm-live-root{font-size:25px}
+.board-right .pm-live-label{font-size:18px}
+.board-right .pm-live-expression{font-size:19px}
+.board-right .pm-live-vline,.board-right .pm-live-hub{background:#fff}
+.board-right .pm-live-reason{font-family:"Segoe Print","Comic Sans MS",cursive;color:rgba(255,255,255,.75)}
+.guided-columns{display:none}
+@media(max-width:900px){.teacher-board-split{grid-template-columns:1fr}.board-divider{height:2px;margin:0 25px}.board-left,.board-right{padding:22px}.board-right .pm-live-map{min-height:330px}}
