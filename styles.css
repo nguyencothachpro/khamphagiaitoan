@@ -685,3 +685,8 @@
   .pm-web-label{font-size:13px}
   .pm-web-expression{font-size:12px;padding:7px 9px}
 }
+
+/* Hiển thị sơ đồ tư duy bằng ảnh SVG chính xác */
+.thinking-image-wrap{min-height:430px;display:flex;align-items:center;justify-content:center;padding:24px;background:#fff}
+.thinking-image{display:block;width:100%;max-width:675px;height:auto;object-fit:contain;image-rendering:auto}
+@media(max-width:600px){.thinking-image-wrap{min-height:300px;padding:12px}.thinking-image{max-width:100%}}
