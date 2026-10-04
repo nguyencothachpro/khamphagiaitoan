@@ -329,3 +329,31 @@
 .board-right .pm-live-reason{font-family:"Segoe Print","Comic Sans MS",cursive;color:rgba(255,255,255,.75)}
 .guided-columns{display:none}
 @media(max-width:900px){.teacher-board-split{grid-template-columns:1fr}.board-divider{height:2px;margin:0 25px}.board-left,.board-right{padding:22px}.board-right .pm-live-map{min-height:330px}}
+
+/* Chữ trên bảng phải rõ, không dùng font viết tay cho toàn bộ lời giải */
+.teacher-board .board-solution,
+.teacher-board .board-solution-step,
+.teacher-board .board-solution-step b,
+.teacher-board .board-solution-step small,
+.teacher-board .board-final{
+  font-family:"Segoe UI",Arial,sans-serif;
+  font-style:normal;
+  letter-spacing:0;
+}
+.teacher-board .board-solution{font-size:15px;line-height:1.75}
+.teacher-board .board-solution-step b{font-size:17px}
+.teacher-board .board-heading{
+  font-family:"Segoe UI",Arial,sans-serif;
+  font-style:normal;
+  font-weight:700;
+}
+.teacher-board .board-right .pm-live-root,
+.teacher-board .board-right .pm-live-label,
+.teacher-board .board-right .pm-live-expression,
+.teacher-board .board-right .pm-live-conclusion{
+  font-family:"Segoe UI",Arial,sans-serif;
+  font-style:normal;
+}
+.teacher-board .board-right .pm-live-root{font-weight:700}
+.teacher-board .board-right .pm-live-label,
+.teacher-board .board-right .pm-live-expression{font-weight:600}
