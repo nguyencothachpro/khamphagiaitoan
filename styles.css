@@ -368,3 +368,54 @@
 .teacher-board .board-right .pm-live-branch{flex:1;text-align:center;position:relative}
 .teacher-board .board-right .pm-live-label{color:#fff;font-size:20px;font-weight:600;margin:4px auto 14px}
 .teacher-board .board-right .pm-live-expression{color:#fff;background:transparent;border:0;font-size:21px;font-weight:700}
+
+/* Sơ đồ tư duy: hiển thị như một bảng phân tích, không phải một thẻ nội dung */
+.teacher-board .board-right .pm-live-map{
+  position:relative;
+  overflow:visible;
+}
+.teacher-board .board-right .pm-live-root{
+  z-index:2;
+  padding:0;
+  min-width:0;
+}
+.teacher-board .board-right .pm-live-vline{
+  height:42px;
+  min-height:42px;
+  width:2px;
+  margin:0 auto;
+}
+.teacher-board .board-right .pm-live-branches{
+  position:relative;
+  width:86%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:70px;
+  padding-top:34px;
+  margin:0 auto;
+}
+.teacher-board .board-right .pm-live-branches:before{
+  content:"";
+  position:absolute;
+  top:13px;
+  left:18%;
+  right:18%;
+  border-top:2px solid #fff;
+}
+.teacher-board .board-right .pm-live-branch:before{
+  content:"↓";
+  display:block;
+  color:#fff;
+  font-size:23px;
+  line-height:20px;
+  margin-bottom:7px;
+}
+.teacher-board .board-right .pm-live-label{
+  min-height:30px;
+  display:block;
+  text-align:center;
+}
+.teacher-board .board-right .pm-live-expression{
+  margin:10px auto 0;
+  text-align:center;
+}
