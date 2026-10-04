@@ -205,3 +205,66 @@
 .guided-actions .prev-btn:disabled{opacity:.35;cursor:not-allowed}
 
 .paste-image:hover{border-color:#7168d7;background:#f5f3ff}
+
+/* ===== BẢNG CỦA THẦY ===== */
+.teacher-board{
+  width:min(820px,100%);
+  margin:14px auto 0;
+  padding:0 0 12px;
+  border:2px solid #d7d2c8;
+  border-radius:12px;
+  background:#f7f4ec;
+  box-shadow:0 4px 14px rgba(60,50,35,.08);
+  overflow:hidden;
+}
+.teacher-board-label{
+  padding:8px 14px;
+  background:#ebe6da;
+  border-bottom:1px solid #d7d2c8;
+  color:#625b4f;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.08em;
+}
+.teacher-board .pm-live-map{
+  max-width:none;
+  margin:0;
+  min-height:205px;
+  border:0;
+  border-radius:0;
+  background:
+    linear-gradient(rgba(120,110,90,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,110,90,.035) 1px,transparent 1px),
+    #fffdf7;
+  background-size:28px 28px;
+  box-shadow:none;
+  padding:24px 20px 28px;
+}
+.teacher-board .pm-live-root,
+.teacher-board .pm-live-label,
+.teacher-board .pm-live-expression,
+.teacher-board .pm-live-conclusion{
+  font-family:"Segoe Print","Comic Sans MS",cursive;
+}
+.teacher-board .pm-live-root{
+  background:#fffef8;
+  border-color:#6258cc;
+}
+.teacher-board .pm-live-label{
+  color:#34312b;
+  font-size:13px;
+}
+.teacher-board .pm-live-expression{
+  background:#fffef8;
+  font-size:15px;
+  color:#3f396b;
+  border-color:#cbc5b5;
+}
+.teacher-board .pm-live-reason{
+  font-family:"Segoe Print","Comic Sans MS",cursive;
+  font-size:10px;
+  color:#776e60;
+}
+.teacher-board .pm-live-conclusion{
+  background:#f5fff8;
+}
