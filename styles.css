@@ -283,3 +283,27 @@
 .guided-complete{margin:0 15px 15px}
 @media(max-width:900px){.guided-columns{grid-template-columns:1fr}.guided-thinking .teacher-board{position:static}.guided-thinking .pm-live-map{min-height:300px}}
 @media(max-width:600px){.guided-columns{padding:10px 9px;gap:10px}.guided-thinking .pm-live-map{min-height:260px;padding:24px 8px 30px}}
+
+/* Bảng của thầy nằm TRÊN; phần dưới mới chia 2 cột */
+.teacher-board{width:min(100%,980px);margin:14px auto 0}
+.guided-columns{display:grid;grid-template-columns:minmax(340px,.95fr) minmax(460px,1.05fr);gap:16px;align-items:start;padding:14px 15px 16px}
+.guided-presentation,.guided-thinking{min-width:0}
+.guided-presentation .guided-current{max-width:none;margin:0;height:100%;box-sizing:border-box}
+.thinking-title{font-size:12px;font-weight:850;color:#57516d;margin:2px 0 8px;padding-left:4px}
+.thinking-map{min-height:430px;border:1px solid #dcd8e8;border-radius:12px;background:#fff;overflow:hidden}
+.thinking-map .pm-live-map-inner{min-height:430px;padding:35px 24px 45px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.thinking-map .pm-live-root{margin-top:15px}
+.thinking-map .pm-live-branches{max-width:620px}
+.thinking-map .pm-live-label{font-size:14px;margin-top:14px}
+.thinking-map .pm-live-expression{font-size:16px;padding:8px 15px}
+.thinking-map .pm-live-reason{max-width:180px}
+.guided-complete{margin:0 15px 15px}
+@media(max-width:900px){
+  .guided-columns{grid-template-columns:1fr}
+  .thinking-map,.thinking-map .pm-live-map-inner{min-height:300px}
+}
+@media(max-width:600px){
+  .guided-columns{padding:10px 9px;gap:10px}
+  .thinking-map,.thinking-map .pm-live-map-inner{min-height:260px}
+  .thinking-map .pm-live-map-inner{padding:24px 8px 30px}
+}
