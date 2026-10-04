@@ -419,3 +419,36 @@
   margin:10px auto 0;
   text-align:center;
 }
+
+/* Tư duy: luôn trình bày đầy đủ, bước hiện tại chỉ được nhấn mạnh */
+.teacher-board .board-right .pm-live-branches,
+.teacher-board .board-right .pm-live-vline,
+.teacher-board .board-right .pm-live-hub,
+.teacher-board .board-right .pm-live-conclusion{
+  display:block;
+  visibility:visible;
+  opacity:1;
+}
+.teacher-board .board-right .pm-live-label,
+.teacher-board .board-right .pm-live-expression,
+.teacher-board .board-right .pm-live-reason{
+  visibility:visible;
+  opacity:1;
+}
+.teacher-board .board-right .pm-live-label.is-current,
+.teacher-board .board-right .pm-live-expression.is-current{
+  color:#ffe66d;
+  text-shadow:0 0 8px rgba(255,230,109,.35);
+  transform:scale(1.05);
+}
+.teacher-board .board-right .pm-live-conclusion{
+  margin-top:34px;
+  text-align:center;
+  color:#fff;
+  font-weight:700;
+}
+.teacher-board .board-right .pm-live-conclusion strong{
+  display:block;
+  margin-top:8px;
+  font-size:21px;
+}
