@@ -268,3 +268,18 @@
 .teacher-board .pm-live-conclusion{
   background:#f5fff8;
 }
+
+/* ===== BỐ CỤC 2 CỘT: TRÌNH BÀY + SƠ ĐỒ CÁCH TƯ DUY ===== */
+.guided-columns{display:grid;grid-template-columns:minmax(330px,.9fr) minmax(460px,1.35fr);gap:16px;align-items:start;padding:14px 15px 16px}
+.guided-presentation,.guided-thinking{min-width:0}
+.guided-presentation .guided-current{max-width:none;margin:0;height:100%;box-sizing:border-box}
+.guided-thinking .teacher-board{width:100%;margin:0;position:sticky;top:12px}
+.guided-thinking .pm-live-map{min-height:430px;justify-content:flex-start;padding:35px 24px 45px}
+.guided-thinking .pm-live-root{margin-top:15px}
+.guided-thinking .pm-live-branches{max-width:620px}
+.guided-thinking .pm-live-label{font-size:14px;margin-top:14px}
+.guided-thinking .pm-live-expression{font-size:16px;padding:8px 15px}
+.guided-thinking .pm-live-reason{max-width:180px}
+.guided-complete{margin:0 15px 15px}
+@media(max-width:900px){.guided-columns{grid-template-columns:1fr}.guided-thinking .teacher-board{position:static}.guided-thinking .pm-live-map{min-height:300px}}
+@media(max-width:600px){.guided-columns{padding:10px 9px;gap:10px}.guided-thinking .pm-live-map{min-height:260px;padding:24px 8px 30px}}
